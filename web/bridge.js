@@ -41,13 +41,14 @@
       r.total = order.length;
       r.level = (Array.isArray(SECS) && Array.isArray(ALL) && SECS.length === ALL.length && ALL.length > 1)
         ? 'All levels'
-        : (Array.isArray(SECS) ? SECS.map(function (s) { return strip(s.name); }).join(' + ') : '');
+        : (Array.isArray(SECS) ? SECS.map(function (s) { return strip(s.name); }).join(' + ') : 'Whole activity');
       r.errors = order.map(function (q, k) {
         var x = res[k];
         if (!x || x.st === 1) return '';
         var line = q.s && q.s.indexOf('___') > -1 ? q.s.replace('___', '[' + q.a + ']') : (q.s ? q.s + ' → ' : '') + q.a;
-        var wrong = (x.picks || []).filter(function (p) { return p !== q.a; }).map(strip);
-        return (q.ph === 2 ? '✍️ ' : '') + strip(line) + (wrong.length ? '  ✗ ' + wrong.join(' / ') : '') + (x.st === 2 ? ' (2nd try)' : '');
+        var wrong = (x.picks || (x.tries || []).filter(function (t) { return !t.ok; }).map(function (t) { return t.val; }))
+          .filter(function (p) { return p !== q.a; }).map(strip);
+        return (q.ph === 2 || q.type === 'w' ? '✍️ ' : '') + strip(line) + (wrong.length ? '  ✗ ' + wrong.join(' / ') : '') + (x.st === 2 ? ' (2nd try)' : '');
       }).filter(Boolean).join('\n');
       r._run = res;
     } else {

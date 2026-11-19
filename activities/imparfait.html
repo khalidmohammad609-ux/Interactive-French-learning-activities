@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>L'imparfait</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Layout: bistro-menu theme — each article family has its own colour (masc / fem / vowel / plural / de / definite), reused in rule table, chips, feedback and report */
+:root{
+  --bg:#fff8f1; --surface:#ffffff; --fg:#2b1a14; --muted:#7a5b4e; --line:#f1dfd2;
+  --m:#2563eb; --m-soft:#dde8ff;     /* du */
+  --f:#db2777; --f-soft:#ffe1ef;     /* de la */
+  --v:#0d9488; --v-soft:#d4f4ee;     /* de l' */
+  --p:#ea580c; --p-soft:#ffe6d4;     /* des */
+  --d:#7c3aed; --d-soft:#ece3ff;     /* de / d' */
+  --t:#ca8a04; --t-soft:#fdf3c9;     /* le la l' les */
+  --q:#0284c7; --q-soft:#dbf0fc;     /* quantité précise */
+  --accent:#c2410c; --accent-soft:#ffe3d3;
+  --good:#16a34a; --good-soft:#dcfce7; --warn:#b45309; --warn-soft:#fef3c7; --bad:#dc2626; --bad-soft:#fee2e2;
+  --display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+  --body:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#1c1310; --surface:#2a1d18; --fg:#fbefe8; --muted:#d0b3a6; --line:#47322a;
+  --m:#82a9ff; --m-soft:#1f2c55; --f:#ff7fb6; --f-soft:#4a1c33; --v:#41d6c3; --v-soft:#0f3b37; --p:#ff9d5e; --p-soft:#4a2714;
+  --d:#b99aff; --d-soft:#34265c; --t:#f5c84a; --t-soft:#3f3210; --q:#5cc4f5; --q-soft:#0f3347;
+  --accent:#ff9b6b; --accent-soft:#4a2617;
+  --good:#4ade80; --good-soft:#133a24; --warn:#fbbf24; --warn-soft:#3d2f0f; --bad:#f87171; --bad-soft:#4a1818; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1c1310; --surface:#2a1d18; --fg:#fbefe8; --muted:#d0b3a6; --line:#47322a;
+  --m:#82a9ff; --m-soft:#1f2c55; --f:#ff7fb6; --f-soft:#4a1c33; --v:#41d6c3; --v-soft:#0f3b37; --p:#ff9d5e; --p-soft:#4a2714;
+  --d:#b99aff; --d-soft:#34265c; --t:#f5c84a; --t-soft:#3f3210; --q:#5cc4f5; --q-soft:#0f3347;
+  --accent:#ff9b6b; --accent-soft:#4a2617;
+  --good:#4ade80; --good-soft:#133a24; --warn:#fbbf24; --warn-soft:#3d2f0f; --bad:#f87171; --bad-soft:#4a1818; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:17px;line-height:1.55}
+.wrap{max-width:920px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 60px;display:flex;flex-direction:column;gap:34px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.1}
+p{margin:0}
+.k-m{--c:var(--m);--s:var(--m-soft)} .k-f{--c:var(--f);--s:var(--f-soft)} .k-v{--c:var(--v);--s:var(--v-soft)}
+.k-p{--c:var(--p);--s:var(--p-soft)} .k-d{--c:var(--d);--s:var(--d-soft)} .k-t{--c:var(--t);--s:var(--t-soft)} .k-q{--c:var(--q);--s:var(--q-soft)}
+
+.hero{display:flex;flex-direction:column;gap:14px}
+.eyebrow{font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--accent)}
+.hero h1{font-size:clamp(2.2rem,7vw,3.9rem);font-weight:800;letter-spacing:-.02em}
+.hero h1 span{display:inline-block;padding:0 .16em;border-radius:.2em}
+.hero h1 .a{background:var(--m-soft);color:var(--m);transform:rotate(-2deg)}
+.hero h1 .b{background:var(--f-soft);color:var(--f);transform:rotate(1.5deg)}
+.hero h1 .c{background:var(--p-soft);color:var(--p);transform:rotate(-1deg)}
+.hero p{max-width:64ch;color:var(--muted)}
+.formula{display:flex;flex-wrap:wrap;align-items:center;gap:10px;font-family:var(--display);font-weight:700;font-size:1.1rem}
+.chip{padding:7px 14px;border-radius:999px;background:var(--s,var(--accent-soft));color:var(--c,var(--accent))}
+.op{color:var(--muted)}
+
+.learn{display:flex;flex-direction:column;gap:22px}
+.learn h2{font-size:1.75rem}
+.table-scroll{overflow-x:auto}
+table{border-collapse:separate;border-spacing:0 8px;width:100%;min-width:540px}
+th{font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);text-align:left;padding:0 14px}
+td{padding:11px 14px;background:var(--s)}
+td:first-child{border-radius:12px 0 0 12px;font-weight:700;color:var(--c);white-space:nowrap}
+td:last-child{border-radius:0 12px 12px 0}
+td b{color:var(--c)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.card{background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.card h3{font-size:1.12rem}
+.card .ex{font-style:italic;color:var(--muted)}
+.card.attn{border-color:var(--warn);background:var(--warn-soft)}
+.card.attn h3{color:var(--warn)}
+.qgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.qcol{background:var(--s);border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.qcol h3{color:var(--c);font-size:1.15rem}
+.qcol ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.qcol b{color:var(--c)}
+.qwords{display:flex;flex-wrap:wrap;gap:8px}
+.qwords span{padding:6px 12px;border-radius:999px;background:var(--s);color:var(--c);font-weight:700;font-family:var(--display)}
+
+.quiz{background:var(--surface);border-radius:24px;padding:22px;border:3px solid var(--accent-soft);display:flex;flex-direction:column;gap:18px}
+.quiz-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.quiz-head h2{font-size:1.75rem}
+.counter{font-family:var(--display);font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums}
+.dots{display:flex;flex-wrap:wrap;gap:6px}
+.dot{width:22px;height:22px;border-radius:50%;background:var(--line);font-size:.7rem;display:grid;place-items:center;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
+.dot.cur{outline:3px solid var(--accent);outline-offset:1px}
+.dot.r1{background:var(--good);color:#fff} .dot.r2{background:var(--warn);color:#fff} .dot.r0{background:var(--bad);color:#fff}
+.sentence{font-size:clamp(1.2rem,3.4vw,1.55rem);font-family:var(--display);font-weight:500;line-height:1.4;min-height:2.9em}
+.blank{display:inline-block;min-width:4.5em;border-bottom:3px dashed var(--accent);text-align:center;color:var(--accent);font-weight:800;padding:0 .2em}
+.blank.ok{border-bottom-style:solid;border-color:var(--good);color:var(--good)}
+.blank.shown{border-bottom-style:solid;border-color:var(--bad);color:var(--bad)}
+.who{font-size:.9rem;color:var(--muted)}
+.opts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media (max-width:560px){.opts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.opt{font:inherit;font-family:var(--display);font-weight:700;font-size:1.08rem;padding:12px 6px;border-radius:14px;border:2px solid var(--c);background:var(--s);color:var(--c);cursor:pointer;transition:transform .12s}
+.opt:hover:not(:disabled){transform:translateY(-2px)}
+.opt:focus-visible,.btn:focus-visible{outline:3px solid var(--fg);outline-offset:2px}
+.opt:disabled{cursor:default;opacity:.35}
+.opt.wrong{opacity:.35;text-decoration:line-through}
+.opt.right{opacity:1;background:var(--good);border-color:var(--good);color:#fff}
+.feedback{border-radius:14px;padding:12px 16px;font-weight:700;display:flex;flex-direction:column;gap:6px}
+.feedback.ok{background:var(--good-soft);color:var(--good)}
+.feedback.hint{background:var(--warn-soft);color:var(--fg);border:2px solid var(--warn)}
+.feedback.no{background:var(--bad-soft);color:var(--bad)}
+.feedback small{font-weight:400;color:var(--fg)}
+.actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}
+.btn{font:inherit;font-weight:700;font-family:var(--display);padding:11px 22px;border-radius:999px;border:none;background:var(--accent);color:var(--surface);cursor:pointer;font-size:1rem}
+.btn.ghost{background:transparent;color:var(--accent);border:2px solid var(--accent)}
+.report{display:flex;flex-direction:column;gap:18px}
+.score{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.big{font-family:var(--display);font-weight:800;font-size:4rem;line-height:1;color:var(--accent);font-variant-numeric:tabular-nums}
+.big small{font-size:1.4rem;color:var(--muted)}
+.verdict{font-size:1.12rem;font-weight:700}
+.tally{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.t{border-radius:14px;padding:12px 14px;background:var(--s);display:flex;flex-direction:column;gap:2px}
+.t b{font-family:var(--display);font-size:1.6rem;font-variant-numeric:tabular-nums;color:var(--c)}
+.t span{font-size:.85rem}
+.mist{display:flex;flex-direction:column;gap:10px;padding:0;margin:0;list-style:none}
+.mist li{border-left:6px solid var(--c);background:var(--s);border-radius:0 12px 12px 0;padding:10px 14px;display:flex;flex-direction:column;gap:4px}
+.mist .q{font-weight:700}
+.mist .meta{font-size:.92rem;color:var(--muted)}
+.mist .meta s{color:var(--bad)} .mist .meta strong{color:var(--good)}
+.advice{background:var(--accent-soft);border-radius:14px;padding:14px 16px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+.steps{display:flex;flex-direction:column;gap:12px}
+.step{display:grid;grid-template-columns:44px 1fr;gap:14px;align-items:start;background:var(--s);border-left:6px solid var(--c);border-radius:0 16px 16px 0;padding:14px 16px}
+.step h3{font-size:1.15rem;color:var(--c);margin-bottom:4px}
+.step p{margin-top:4px}
+.num{width:40px;height:40px;border-radius:50%;background:var(--c);color:#fff;display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:1.2rem}
+.step.goal{border:3px solid var(--c);border-left-width:6px;box-shadow:0 6px 0 var(--s)}
+.ex{font-family:var(--display);font-size:1.05rem}
+b.s{color:var(--m)} b.v{color:var(--v)} b.o{color:var(--f)}
+.note{background:var(--accent-soft);border-radius:12px;padding:10px 14px;font-weight:600}
+.task{font-size:clamp(1.1rem,3vw,1.35rem);font-family:var(--display);line-height:1.4}
+.task b{color:var(--accent)}
+.opts{grid-template-columns:1fr!important}
+.opt{text-align:left;padding:12px 16px;font-size:1.02rem}
+.wform{display:flex;gap:10px;flex-wrap:wrap}
+#win{flex:1 1 260px;min-width:0;font:inherit;font-family:var(--display);font-size:1.1rem;padding:12px 14px;border-radius:14px;border:2px solid var(--v);background:var(--v-soft);color:var(--fg)}
+#win:focus{outline:3px solid var(--accent);outline-offset:1px}
+#win:disabled{opacity:.6}
+.kbd{display:flex;gap:8px;flex-wrap:wrap}
+.key{font:inherit;font-family:var(--display);font-weight:700;font-size:1.1rem;width:44px;height:40px;border-radius:10px;border:2px solid var(--p);background:var(--p-soft);color:var(--p);cursor:pointer}
+.key:disabled{opacity:.4;cursor:default}
+.navrow{justify-content:space-between}
+.btn:disabled{opacity:.4;cursor:default}
+button.dot{border:none;font-family:inherit;cursor:pointer;padding:0}
+button.dot:disabled{cursor:default;opacity:.55}
+.dot.w:not(.r1):not(.r2):not(.r0){background:var(--p-soft);color:var(--p)}
+.sep{font-size:.9rem;margin:0 4px;align-self:center}
+.k-good{--c:var(--good);--s:var(--good-soft)} .k-mid{--c:var(--warn);--s:var(--warn-soft)}
+.feedback small{display:block;margin-top:6px}
+.report h3{font-size:1.3rem}
+.why{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.wcard{background:var(--s);border-top:6px solid var(--c);border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.wcard h3{font-size:1.05rem;color:var(--c)}
+.ps{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;border:2px dashed var(--accent);background:var(--accent-soft);border-radius:16px;padding:16px}
+.ps h3{font-size:1.1rem;color:var(--accent);margin-bottom:6px}
+.ps p{margin-top:6px}
+.ps-tag{font-family:var(--display);font-weight:800;font-size:1.3rem;color:var(--surface);background:var(--accent);border-radius:12px;padding:6px 10px;transform:rotate(-4deg)}
+
+.task .who{color:var(--muted);font-weight:600}
+.wform .pre{align-self:center;font-family:var(--display);font-weight:700;font-size:1.05rem;color:var(--m);flex:0 0 auto}
+.hero h1{font-size:clamp(1.9rem,6vw,3.3rem)}
+
+.opts{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+.opt{text-align:center}
+.sentence .inf{font-size:.8em;color:var(--muted);font-style:italic}
+.name-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--m-soft);border-radius:14px;padding:10px 14px}
+.name-row label{font-family:var(--display);font-weight:700;color:var(--m)}
+#sname{flex:1 1 200px;min-width:0;font:inherit;padding:9px 12px;border-radius:10px;border:2px solid var(--m);background:var(--surface);color:var(--fg)}
+.rname{font-family:var(--display);font-weight:700;font-size:1.2rem;color:var(--m)}
+.step s{color:var(--bad)}
+.table-scroll table{min-width:0;font-size:.92rem}
+.table-scroll th,.table-scroll td{padding:8px 7px}
+@media (max-width:480px){.table-scroll table{font-size:.7rem}.table-scroll th{letter-spacing:0;font-size:.6rem}.table-scroll th,.table-scroll td{padding:7px 3px}.table-scroll td:first-child{padding-left:6px}}
+
+.timeline{display:flex;flex-direction:column;gap:10px;background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:16px}
+.tl-row{display:grid;grid-template-columns:120px 1fr;gap:10px;align-items:center}
+.tl-lab{font-family:var(--display);font-weight:800;color:var(--c);background:var(--s);border-radius:999px;padding:5px 10px;text-align:center;font-size:.9rem}
+.tl-bar{border-bottom:3px solid var(--line);padding-bottom:6px;font-family:var(--display);}
+.wave{color:var(--m);font-weight:700;text-decoration:underline wavy var(--m);text-underline-offset:6px}
+.pt{color:var(--f);font-weight:800;margin-left:45%}
+@media (max-width:480px){.tl-row{grid-template-columns:1fr}.pt{margin-left:30%}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="eyebrow">Objectif Diplomatie 1 · Unité 6 · C'était une excellente soirée</div>
+    <h1>Il <span class="a">marchait</span> dans la rue, il <span class="c">a vu</span> son ami</h1>
+    <p>The imparfait is a past tense with <b>no sense of completion</b>. It describes what <b>was going on</b>, what <b>was</b> (a state) and what <b>used to happen</b> again and again. The passé composé tells what happened, once, and is finished.</p>
+    <div class="formula">
+      <span class="chip k-m">continuous</span><span class="chip k-f">state</span><span class="chip k-t">repetition</span>
+    </div>
+  </header>
+
+  <section class="learn">
+    <h2>When? Three uses 🎬</h2>
+    <div class="why">
+      <div class="wcard k-m"><h3>🚶 An ongoing action</h3><p>Something was in progress… when something else happened.</p><p class="ex">Il <b>marchait</b> dans la rue, il a vu son ami.</p></div>
+      <div class="wcard k-f"><h3>🌙 A state, a description</h3><p>How things were: feelings, weather, age, places, people.</p><p class="ex">C'<b>était</b> une excellente soirée. Tout <b>était</b> parfait.</p></div>
+      <div class="wcard k-t"><h3>🔁 A repetition, a habit</h3><p>What used to happen many times.</p><p class="ex">Quand j'<b>étais</b> petit, je <b>mangeais</b> souvent des glaces.</p></div>
+    </div>
+
+    <div class="timeline" aria-label="Imparfait and passé composé on a timeline">
+      <div class="tl-row"><span class="tl-lab k-m">imparfait</span><div class="tl-bar"><span class="wave">il marchait dans la rue …………</span></div></div>
+      <div class="tl-row"><span class="tl-lab k-f">passé composé</span><div class="tl-bar"><span class="pt">● il a vu son ami</span></div></div>
+      <p class="note">The imparfait is the <b>background</b> (a line with no end). The passé composé is the <b>event</b> (a point, finished).</p>
+    </div>
+
+    <div class="cards">
+      <div class="card"><h3>Clue words → imparfait 🔁</h3><p class="ex">souvent · toujours · tous les jours · d'habitude · le samedi · quand j'étais petit · autrefois</p></div>
+      <div class="card"><h3>Clue words → passé composé ●</h3><p class="ex">hier · ce matin · soudain · tout à coup · une fois · en 2020 (one event)</p></div>
+      <div class="card attn"><h3>Watch out! ⚠️</h3><p>The verb alone doesn't decide. Ask: <b>is it finished, once?</b> or <b>was it going on / a state / a habit?</b></p><p class="ex">Hier, j'ai mangé une glace. (once) · Je mangeais souvent des glaces. (habit)</p></div>
+    </div>
+
+    <h2>How to form it</h2>
+    <div class="steps">
+      <div class="step k-m"><span class="num">1</span><div><h3>Take the nous form of the present</h3><p>Remove <b>-ons</b>: that is your stem.</p><p class="ex">nous parl<s>ons</s> → parl- · nous finiss<s>ons</s> → finiss- · nous fais<s>ons</s> → fais- · nous pren<s>ons</s> → pren-</p></div></div>
+      <div class="step k-f"><span class="num">2</span><div><h3>Add the endings</h3><p class="ex">je -ais · tu -ais · il -ait · nous -ions · vous -iez · ils -aient</p></div></div>
+      <div class="step k-t goal"><span class="num">3</span><div><h3>Only one exception: être → ét-</h3><p class="ex">j'étais · tu étais · il était · nous étions · vous étiez · ils étaient</p></div></div>
+    </div>
+
+    <div class="table-scroll"><table>
+      <thead><tr><th></th><th>parler</th><th>finir</th><th>faire</th><th>être</th></tr></thead>
+      <tbody>
+        <tr class="k-m"><td>je</td><td>parlais</td><td>finissais</td><td>faisais</td><td>étais</td></tr>
+        <tr class="k-m"><td>tu</td><td>parlais</td><td>finissais</td><td>faisais</td><td>étais</td></tr>
+        <tr class="k-m"><td>il / elle / on</td><td>parlait</td><td>finissait</td><td>faisait</td><td>était</td></tr>
+        <tr class="k-t"><td>nous</td><td>parlions</td><td>finissions</td><td>faisions</td><td>étions</td></tr>
+        <tr class="k-t"><td>vous</td><td>parliez</td><td>finissiez</td><td>faisiez</td><td>étiez</td></tr>
+        <tr class="k-m"><td>ils / elles</td><td>parlaient</td><td>finissaient</td><td>faisaient</td><td>étaient</td></tr>
+      </tbody></table></div>
+
+    <div class="cards">
+      <div class="card"><h3>You already know nous / vous! 🔗</h3><p>For -er verbs, nous parlions and vous parliez look exactly like the subjonctif you just learned. The sentence tells you which one: « Il faut que vous parliez » (subjonctif) · « Avant, vous parliez » (imparfait).</p></div>
+      <div class="card"><h3>Same sound for 4 persons 👂</h3><p>je parlais, tu parlais, il parlait, ils parlaient all sound the same. Only the spelling changes: -ais, -ais, -ait, -aient.</p></div>
+      <div class="card attn"><h3>-ger and -cer verbs ✏️</h3><p>Keep the sound before a: je mang<b>e</b>ais, il commen<b>ç</b>ait. But before i, no change: nous mangions, vous commenciez.</p></div>
+    </div>
+  </section>
+
+  <section class="quiz" aria-live="polite">
+    <div class="name-row"><label for="sname">👤 Your name</label><input id="sname" maxlength="60" autocomplete="off" placeholder="Write your name before you start"></div>
+    <div class="quiz-head"><h2 id="qtitle">À vous ! 20 phrases</h2><div class="counter" id="counter">1 / 20</div></div>
+    <div class="dots" id="dots"></div>
+    <div id="stage"></div>
+  </section>
+</div>
+
+<script>
+const CAT = {
+  use:{k:"k-m", name:"Imparfait or passé composé (which use?)"},
+  end:{k:"k-f", name:"The ending for each person"},
+  stem:{k:"k-t", name:"The stem from « nous …-ons »"},
+  etre:{k:"k-p", name:"être → ét-"},
+  pres:{k:"k-v", name:"Present instead of past"},
+  spell:{k:"k-q", name:"-ger / -cer spelling"},
+  acc:{k:"k-d", name:"Accents and spelling"}
+};
+
+/* PART 1: choose */
+const MCQ = [
+ {s:"Quand j'___ étudiant, j'habitais à Delhi.", v:"être", a:"étais", o:{
+  "été":["etre","« été » is the past participle (j'ai été). Here you describe a state that lasted: imparfait of être, stem ét-."],
+  "ai été":["use","« j'ai été » presents it as finished, once. Being a student is a state that lasted: imparfait."],
+  "était":["end","Imparfait, good! But -ait goes with il / elle. With je, the ending is…?"]}},
+ {s:"Pendant la fête, les invités ___ quand le téléphone a sonné.", v:"danser", a:"dansaient", o:{
+  "ont dansé":["use","The guests were in the middle of dancing (ongoing) when the phone rang (event). Which tense for the background?"],
+  "dansait":["end","Imparfait, good! But -ait is for il / elle. les invités = ils: which ending?"],
+  "dansiez":["end","-iez is the vous ending. The subject is les invités (ils)."]}},
+ {s:"Hier soir, nous ___ au restaurant indien avec l'ambassadeur.", v:"dîner", a:"avons dîné", o:{
+  "dînions":["use","« Hier soir » = one evening, one finished event. Not a habit, not a state: passé composé."],
+  "dînons":["pres","« dînons » is the present. Hier soir is in the past."],
+  "dînerons":["pres","« dînerons » is the future. Hier soir is in the past."]}},
+ {s:"Quand elle était petite, elle ___ souvent à la plage.", v:"aller", a:"allait", o:{
+  "est allée":["use","« souvent » = many times, a habit. A repetition in the past takes the imparfait."],
+  "allais":["end","Imparfait, good! But -ais is for je / tu. With elle?"],
+  "va":["pres","« va » is the present. Quand elle était petite = in the past."]}},
+ {s:"La salle ___ très belle et la musique était douce.", v:"être", a:"était", o:{
+  "a été":["use","You are describing how the room was: a state, a description → imparfait."],
+  "étais":["end","-ais is for je / tu. La salle = elle: which ending?"],
+  "est":["pres","« est » is the present. The rest of the sentence (était douce) is in the past."]}},
+ {s:"Le samedi, nous ___ toujours le travail à midi.", v:"finir", a:"finissions", o:{
+  "finions":["stem","The stem comes from nous finissons → finiss-. Don't cut it."],
+  "finissons":["pres","« finissons » is the present. Change -ons to the imparfait ending for nous."],
+  "avons fini":["use","« le samedi… toujours » = every Saturday, a habit. A repetition takes the imparfait."]}},
+ {s:"En France, vous ___ souvent du fromage ?", v:"manger", a:"mangiez", o:{
+  "mangeiez":["spell","The e of mange- is only needed before a or o (je mangeais). Before i, no e: vous mang-iez."],
+  "mangez":["pres","« mangez » is the present. Add the imparfait ending for vous."],
+  "avez mangé":["use","« souvent » = a habit, many times → imparfait."]}},
+ {s:"Je ___ le journal quand mon collègue est arrivé.", v:"lire", a:"lisais", o:{
+  "ai lu":["use","I was in the middle of reading (ongoing) when my colleague arrived (event). Background → imparfait."],
+  "lirais":["stem","« lirais » is the conditional (would read). The imparfait stem comes from nous lisons → lis-."],
+  "lis":["pres","« lis » is the present. The sentence is in the past (est arrivé)."]}},
+ {s:"Soudain, la ministre ___ dans la salle.", v:"entrer", a:"est entrée", o:{
+  "entrait":["use","« Soudain » = suddenly: one event, at one moment, finished → passé composé."],
+  "entre":["pres","« entre » is the present. Soudain tells a past event here."],
+  "était entrée":["use","That's the plus-que-parfait (before another past action). Here it is simply the main event: passé composé."]}},
+ {s:"Tu ___ beaucoup d'amis à l'université ?", v:"avoir", a:"avais", o:{
+  "avait":["end","-ait is for il / elle. With tu, the ending is…?"],
+  "as eu":["use","Having friends at university is a state that lasted, not one finished event → imparfait."],
+  "aviez":["end","-iez is for vous. The subject is tu."]}}
+];
+
+/* PART 2: write the imparfait. nous = present nous form, for stem hints */
+const WR = [
+ {s:"Quand j'étais enfant, je ___ au cricket tous les jours.", v:"jouer", nous:"jouons", a:"jouais", end:"ais", w:{
+  "joue":["pres","« joue » is the present. Tous les jours in the past = a habit: imparfait."],
+  "ai joué":["use","« tous les jours » = a habit. A habit in the past takes the imparfait."]}},
+ {s:"Mon grand-père ___ diplomate.", v:"être", nous:"", a:"était", end:"ait", w:{
+  "est":["pres","« est » is the present. He was a diplomat in the past: a state → imparfait."],
+  "a été":["use","Being a diplomat is a state that lasted → imparfait."],
+  "etait":["acc","Almost! être has an accent: é."]}},
+ {s:"En 2020, nous ___ à Paris.", v:"habiter", nous:"habitons", a:"habitions", end:"ions", w:{
+  "habitons":["pres","« habitons » is the present. Change -ons into the imparfait ending for nous: -ions."],
+  "habitiions":["stem","Just one i: habit- + -ions."]}},
+ {s:"Il ___ quand je suis sorti du bureau.", v:"pleuvoir", nous:"", a:"pleuvait", end:"ait", w:{
+  "pleut":["pres","« pleut » is the present. It was raining (ongoing) when I went out: imparfait."],
+  "a plu":["use","It was raining (background) when I went out (event) → imparfait."],
+  "pluvait":["stem","The imparfait stem of pleuvoir is pleuv-, like in « il pleut »: pleuv- + -ait."]}},
+ {s:"Les enfants ___ la télévision quand leur mère est arrivée.", v:"regarder", nous:"regardons", a:"regardaient", end:"aient", w:{
+  "regardent":["pres","« regardent » is the present. They were watching (ongoing) when she arrived: imparfait."],
+  "ont regardé":["use","They were in the middle of watching (background) → imparfait."]}},
+ {s:"Vous ___ du sport quand vous étiez jeune ?", v:"faire", nous:"faisons", a:"faisiez", end:"iez", w:{
+  "faites":["pres","« faites » is the present. Quand vous étiez jeune = a habit in the past."],
+  "fesiez":["stem","Take nous faisons → fais-. Keep the spelling ai: fais- + -iez."],
+  "faissiez":["stem","Only one s: nous faisons → fais-."]}},
+ {s:"Tu ___ le bus pour aller à l'école ?", v:"prendre", nous:"prenons", a:"prenais", end:"ais", w:{
+  "prends":["pres","« prends » is the present. Use the imparfait: a habit in the past."],
+  "prennais":["stem","The stem comes from nous prenons: one n. pren- + -ais."]}},
+ {s:"Elle ___ son travail à 9 h tous les matins.", v:"commencer", nous:"commençons", a:"commençait", end:"ait", w:{
+  "commencait":["spell","Before a, c needs a cedilla to keep the [s] sound: ç."],
+  "commence":["pres","« commence » is the present. Tous les matins in the past = a habit → imparfait."]}},
+ {s:"Nous ___ souvent au restaurant le dimanche.", v:"manger", nous:"mangeons", a:"mangions", end:"ions", w:{
+  "mangeions":["spell","The e of mange- is only needed before a or o. Before i, no e: mang- + -ions."],
+  "mangeons":["pres","« mangeons » is the present. The imparfait ending for nous is -ions (and the e goes)."]}},
+ {s:"Quand j'avais quinze ans, je ___ devenir avocat.", v:"vouloir", nous:"voulons", a:"voulais", end:"ais", w:{
+  "veux":["pres","« veux » is the present. Quand j'avais quinze ans = in the past, a state (a wish that lasted)."],
+  "voulait":["end","-ait is for il / elle. With je, the ending is -ais."]}}
+];
+
+/* ---------- helpers ---------- */
+const $ = id => document.getElementById(id);
+const shuffle = a => { a=[...a]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]} return a; };
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const norm = s => String(s).toLowerCase().replace(/[’`´]/g,"'").replace(/\s+/g," ").replace(/[.!?]+$/,"").trim();
+const noAcc = s => s.normalize("NFD").replace(/[̀-ͯ]/g,"");
+const ENDS = {aient:"ils", ions:"nous", iez:"vous", ais:"je / tu", ait:"il / elle"};
+
+function diagnose(q, input){
+  let s = norm(input).replace(/^(je |j'|tu |il |elle |on |nous |vous |ils |elles )+/,"").trim();
+  if (!s) return ["end","Write the verb in the imparfait."];
+  if (s === q.a) return null;
+  if (q.w[s]) return q.w[s];
+  if (noAcc(s) === noAcc(q.a)) return [q.a.includes("ç") ? "spell" : "acc", q.a.includes("ç") ? "Almost! Before a, c needs a cedilla: ç." : "Almost! Only an accent is wrong or missing."];
+  if (noAcc(s) === noAcc(q.v)) return ["pres","That's the infinitive. Conjugate the verb in the imparfait."];
+  if (/^(ai|as|a|avons|avez|ont|suis|es|est|sommes|etes|êtes|sont) /.test(s)) return ["use","That's the passé composé (finished, once). Look at the sentence again: an ongoing action, a state or a habit → imparfait."];
+  if (/(é|ée|és|ées)$/.test(s)) return ["use",`« ${s} » is a past participle (passé composé). Use the imparfait: stem + -${q.end}.`];
+  if (/ons$/.test(s) && !/ions$/.test(s)) return ["pres",`« ${s} » is the present (nous). For the imparfait, take the stem and add -${q.end}.`];
+  const got = Object.keys(ENDS).find(e => s.endsWith(e));
+  if (got !== q.end) {
+    if (!got) return ["pres",`This is not an imparfait form. The imparfait endings are -ais, -ais, -ait, -ions, -iez, -aient. Here: -${q.end}.`];
+    return ["end",`-${got} goes with ${ENDS[got]}. Look at the subject: the ending is -${q.end}.`];
+  }
+  if (q.v === "être") return ["etre","être is the only exception: its stem is ét-."];
+  return ["stem", q.nous ? `The ending is right. Now check the stem: nous ${q.nous} → ${q.nous.replace(/ons$/,"")}-.` : `The ending is right. Check the stem of ${q.v}.`];
+}
+
+/* ---------- engine ---------- */
+let order, i, res;
+function start(){
+  const s1 = shuffle(MCQ).map(q => ({...q, type:"c", opts: shuffle([q.a, ...Object.keys(q.o)])}));
+  const s2 = shuffle(WR).map(q => ({...q, type:"w"}));
+  order = [...s1, ...s2];
+  res = order.map(() => ({tries:[], done:false, st:null, cats:[]}));
+  i = 0; show();
+}
+const full = q => q.s.replace("___", q.a);
+const frontier = () => { const k = res.findIndex(r => !r.done); return k < 0 ? order.length - 1 : k; };
+const allDone = () => res.every(r => r.done);
+function dots(view){
+  const f = frontier();
+  $("dots").innerHTML = order.map((q,k) => {
+    const r = res[k]; let c = "dot" + (q.type === "w" ? " w" : "");
+    if (r.done) c += r.st === 1 ? " r1" : r.st === 2 ? " r2" : " r0";
+    if (k === i && view !== "r") c += " cur";
+    const can = r.done || k === f;
+    return (k === 10 ? '<span class="sep">✍️</span>' : '') + `<button class="${c}" ${can ? "" : "disabled"} data-k="${k}" aria-label="Question ${k+1}">${k+1}</button>`;
+  }).join("");
+  document.querySelectorAll("#dots .dot").forEach(b => b.onclick = () => { i = +b.dataset.k; show(); });
+}
+function show(){
+  const q = order[i], r = res[i];
+  $("counter").textContent = `${i+1} / ${order.length}`;
+  $("qtitle").textContent = q.type === "c" ? "Partie 1 · Imparfait ou passé composé ?" : "Partie 2 · Écrivez l'imparfait";
+  dots();
+  const verb = q.type === "c" ? "You chose" : "You wrote";
+  const lastWrong = r.tries.filter(t => !t.ok).slice(-1)[0];
+  let fb = "";
+  if (!r.done && lastWrong) fb = `<div class="feedback hint">Not quite: « ${esc(lastWrong.val)} ». <small>${lastWrong.hint}</small><small><b>Think again and try once more.</b></small></div>`;
+  if (r.done) {
+    if (r.st === 1) fb = `<div class="feedback ok">Très bien ! <small>${esc(full(q))}</small></div>`;
+    else if (r.st === 2) fb = `<div class="feedback ok">Oui, c'est ça ! <small>${esc(full(q))}</small></div>`;
+    else fb = `<div class="feedback no">The correct answer: <b>${esc(q.a)}</b> <small>${esc(full(q))}</small>${r.tries.map(t => `<small>${verb} « ${esc(t.val)} »: ${t.hint}</small>`).join("")}</div>`;
+  }
+  const cls = r.done ? (r.st === 0 ? "blank shown" : "blank ok") : "blank";
+  const sent = `<p class="sentence">${esc(q.s).replace("___", `<span class="${cls}">${r.done ? esc(q.a) : "?"}</span>`)} <span class="inf">(${esc(q.v)})</span></p>`;
+  let body;
+  if (q.type === "c") {
+    const picked = r.tries.map(t => t.val);
+    body = sent + `<div class="opts">${q.opts.map(o => {
+        let c = "opt k-v"; const wrong = picked.includes(o) && o !== q.a;
+        if (wrong) c += " wrong"; if (r.done && o === q.a) c += " right";
+        return `<button class="${c}" ${r.done || wrong ? "disabled" : ""} data-o="${esc(o)}">${esc(o)}</button>`;
+      }).join("")}</div>`;
+  } else {
+    const last = r.tries.length ? r.tries[r.tries.length-1].val : "";
+    body = sent + `<form id="wf" class="wform"><input id="win" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="The verb only…" value="${r.done ? "" : esc(last)}" ${r.done ? "disabled" : ""}>
+      <button class="btn" type="submit" ${r.done ? "disabled" : ""}>Check</button></form>
+      <div class="kbd">${["é","è","ê","ç"].map(c => `<button type="button" class="key" data-c="${c}" ${r.done ? "disabled" : ""}>${c}</button>`).join("")}</div>`;
+  }
+  $("stage").innerHTML = `${body}<div id="fb">${fb}</div>
+    <div class="actions navrow">
+      <button class="btn ghost" id="prev" ${i === 0 ? "disabled" : ""}>← Previous</button>
+      ${i < order.length - 1 ? `<button class="btn" id="next" ${r.done ? "" : "disabled"}>Next →</button>` : ""}
+      ${allDone() ? `<button class="btn" id="rep">See my results</button>` : ""}
+    </div>`;
+  if (q.type === "c") document.querySelectorAll("#stage .opt").forEach(b => b.onclick = () => answer(b.dataset.o));
+  else {
+    $("wf").onsubmit = e => { e.preventDefault(); answer($("win").value); };
+    document.querySelectorAll(".key").forEach(k => k.onclick = () => { const inp = $("win"), p = inp.selectionStart ?? inp.value.length; inp.value = inp.value.slice(0,p) + k.dataset.c + inp.value.slice(inp.selectionEnd ?? p); inp.focus(); inp.setSelectionRange(p+1,p+1); });
+    if (!r.done) $("win").focus({preventScroll:true});
+  }
+  $("prev").onclick = () => { i--; show(); };
+  if ($("next")) $("next").onclick = () => { i++; show(); };
+  if ($("rep")) $("rep").onclick = report;
+  const n = $("next") || $("rep"); if (r.done && n) n.focus({preventScroll:true});
+}
+function answer(val){
+  const q = order[i], r = res[i]; if (r.done || !String(val).trim()) return;
+  let ok, cat = null, hint = "";
+  if (q.type === "c") { ok = val === q.a; if (!ok) [cat, hint] = q.o[val]; }
+  else { const d = diagnose(q, val); ok = !d; if (!ok) [cat, hint] = d; }
+  r.tries.push({val, ok, hint});
+  if (ok) { r.done = true; r.st = r.tries.length === 1 ? 1 : 2; }
+  else { r.cats.push(cat); if (r.tries.length >= 2) { r.done = true; r.st = 0; } }
+  show();
+}
+function report(){
+  dots("r"); $("counter").textContent = "Résultats"; $("qtitle").textContent = "Vos résultats";
+  const name = ($("sname").value || "").trim();
+  const g = s => res.filter(r => r.st === s).length, pts = g(1) + g(2) * .5, pct = pts / order.length;
+  const errCount = {}; res.forEach(r => r.cats.forEach(c => errCount[c] = (errCount[c] || 0) + 1));
+  const used = ["use","end","stem","etre","pres","spell"];
+  const strong = used.filter(c => !errCount[c]);
+  const weak = Object.entries(errCount).sort((a,b) => b[1]-a[1])[0];
+  const part = (a,b) => { const rr = res.slice(a,b); return rr.filter(r => r.st === 1).length + rr.filter(r => r.st === 2).length * .5; };
+  const errs = order.map((q,k) => ({q, r:res[k], k})).filter(x => x.r.st !== 1);
+  $("stage").innerHTML = `<div class="report">
+    ${name ? `<p class="rname">👤 ${esc(name)}</p>` : ""}
+    <div class="score"><div class="big">${pts}<small> / 20</small></div><p class="verdict">${pct >= .9 ? "Excellent ! 🎉 C'était parfait !" : pct >= .7 ? "Bien ! 👍 Look at your errors below." : "Read « When? » and « How to form it » again, then try a new round. 💪"}</p></div>
+    <div class="tally">
+      <div class="t" style="--c:var(--good);--s:var(--good-soft)"><b>${part(0,10)} / 10</b><span>Partie 1 · choisir</span></div>
+      <div class="t" style="--c:var(--accent);--s:var(--accent-soft)"><b>${part(10,20)} / 10</b><span>Partie 2 · écrire</span></div>
+      <div class="t" style="--c:var(--bad);--s:var(--bad-soft)"><b>${g(0)}</b><span>to review</span></div>
+    </div>
+    <h3>Points forts</h3>
+    ${strong.length ? `<ul class="mist">${strong.map(c => `<li class="k-good"><span class="q">✔ ${CAT[c].name}</span><span class="meta">No mistake on this point.</span></li>`).join("")}</ul>` : `<p class="meta">Every point below is worth one more look.</p>`}
+    <h3>Erreurs à revoir</h3>
+    ${errs.length ? `<ul class="mist">${errs.map(({q,r,k}) => `<li class="${CAT[r.cats[0]||"end"].k}"><span class="q">${k+1}. ${esc(q.s).replace("___", "<u>"+esc(q.a)+"</u>")} (${esc(q.v)})</span>${r.tries.filter(t => !t.ok).map(t => `<span class="meta">${q.type === "c" ? "You chose" : "You wrote"} « <s>${esc(t.val)}</s> »: ${t.hint}</span>`).join("")}</li>`).join("")}</ul>` : `<p class="meta">No errors. Parfait !</p>`}
+    <p class="advice">${weak ? `<b>Your point to practise:</b> ${CAT[weak[0]].name} (${weak[1]} error${weak[1] > 1 ? "s" : ""}). ` : "<b>Parfait !</b> "}Then tell your neighbour three things: « Quand j'étais petit(e), je… souvent », « Mon école était… », « Un jour, … ».</p>
+    <div class="actions"><button class="btn ghost" id="review">← Review my answers</button><button class="btn" id="again">Try again (new order)</button></div>
+  </div>`;
+  $("review").onclick = () => { i = 0; show(); };
+  $("again").onclick = start;
+}
+start();
+</script>
+
+</body>
+</html>
