@@ -1,6 +1,7 @@
 # Changelog
 
 ## v1.1 — 19 Nov 2026
+- ➕ Add activity: « 🔗 Add from a claude.ai link » sends the link to Claude as a GitHub issue (label add-activity).
 - Master page: ➕ Add activity (upload or paste an .html file; stored in Drive folder « French activities — files », listed in the « Activities » tab of the Sheet). Warns if a page won't save results.
 - Each activity card: ✏️ Edit details, 🙈 Hide/👁 Show on the student page, 🗑️ Remove (with ♻️ Restore), ⬆️ Upgrade, 🎬 Videos.
 - ⬆️ Upgrade: checks the page against web/standard.json (the current standard), lists every feature as present / missing / check; choose Keep · Add · Change · Remove per feature; sends an « upgrade » request to Claude as a GitHub issue.

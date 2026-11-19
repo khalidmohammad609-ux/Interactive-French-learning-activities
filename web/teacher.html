@@ -131,6 +131,12 @@ details pre{white-space:pre-wrap;font:inherit;font-size:.85rem;margin:6px 0 0;ba
 <!-- ➕ Add activity -->
 <div class="ov" id="addOv"><div class="dlg" style="--c:var(--orange)">
   <div class="head"><h2>➕ Add an activity</h2><button class="x" data-close="addOv">✕</button></div>
+  <div class="msg" style="background:var(--blue-s);color:var(--fg);font-weight:400;display:flex;flex-direction:column;gap:8px">
+    <b style="color:var(--blue)">🔗 Add from a claude.ai link</b>
+    <span style="font-size:.9rem">Paste the activity's claude.ai link; Claude copies it into the app next time you say « check my app feedback ». (Title, topic and cohort below are optional for a link.)</span>
+    <div class="row"><input id="aLink" placeholder="https://claude.ai/artifact/…" style="font-size:.95rem;color:var(--fg)"><button class="sm" style="--c:var(--blue)" id="linkGo">📨 Send link to Claude</button></div>
+  </div>
+  <p class="muted" style="margin:0;text-align:center;font-weight:700">— or, instantly —</p>
   <label class="drop" id="drop">📄 Choose the activity's .html file (or drop it here)<input type="file" id="file" accept=".html,.htm,text/html" hidden></label>
   <details><summary>…or paste the page's code</summary><textarea class="big" id="paste" placeholder="<!DOCTYPE html> …"></textarea></details>
   <div class="form">
@@ -221,6 +227,10 @@ function takeHtml(h,fname){NEW_HTML=h;var m=h.match(/<title>([^<]*)<\/title>/i);
 $('file').onchange=function(){var f=this.files[0];if(!f)return;var r=new FileReader();r.onload=function(){takeHtml(String(r.result),f.name)};r.readAsText(f,'utf-8')};
 var dz=$('drop');dz.addEventListener('dragover',function(e){e.preventDefault()});dz.addEventListener('drop',function(e){e.preventDefault();var f=e.dataTransfer.files[0];if(f){var r=new FileReader();r.onload=function(){takeHtml(String(r.result),f.name)};r.readAsText(f,'utf-8')}});
 $('paste').oninput=function(){if(this.value.trim().length>50)takeHtml(this.value,'')};
+$('linkGo').onclick=function(){var u=$('aLink').value.trim();if(!/^https?:\/\/(www\.)?claude\.ai\//.test(u)){$('addMsg').innerHTML='<div class="msg bad">Paste a claude.ai link (it starts with https://claude.ai/…).</div>';$('aLink').focus();return}
+ var t=$('aTitle').value.trim(),body='**Add this activity to the app**\n\n**Link:** '+u+'\n'+(t?'**Title:** '+t+'\n':'')+($('aEmoji').value.trim()&&$('aEmoji').value.trim()!=='📘'?'**Emoji:** '+$('aEmoji').value.trim()+'\n':'')+($('aTopic').value.trim()?'**Topic:** '+$('aTopic').value.trim()+'\n':'')+($('aFor').value.trim()?'**For:** '+$('aFor').value.trim()+'\n':'')+'**Hidden from student page:** '+($('aHidden').checked?'yes':'no')+'\n\n— sent from the master page, '+new Date().toLocaleString('en-GB');
+ window.open(D.repo+'/issues/new?labels=add-activity&title='+encodeURIComponent('Add activity: '+(t||u))+'&body='+encodeURIComponent(body),'_blank');
+ $('addMsg').innerHTML='<div class="msg ok">📨 GitHub opened: press <b>Submit new issue</b> there, then tell Claude « check my app feedback ».</div>';$('aLink').value=''};
 $('addGo').onclick=function(){var h=NEW_HTML||$('paste').value;if(!h||h.length<50){$('addMsg').innerHTML='<div class="msg bad">Choose the .html file (or paste the page code) first.</div>';return}
  if(!$('aTitle').value.trim()){$('aTitle').focus();return}
  var meta={title:$('aTitle').value.trim(),emoji:$('aEmoji').value.trim(),topic:$('aTopic').value.trim(),'for':$('aFor').value.trim(),hidden:$('aHidden').checked};
