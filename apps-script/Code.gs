@@ -13,7 +13,7 @@
 
 // ---- Settings ---------------------------------------------------------------
 const GITHUB_OWNER  = 'khalidmohammad609-ux';
-const GITHUB_REPO   = 'interactive-french-learning-activities';
+const GITHUB_REPO   = 'Interactive-French-learning-activities';
 const GITHUB_BRANCH = 'main';
 const CACHE_SECONDS = 300;                       // GitHub files are re-read every 5 min
 const SHEET_NAME    = 'Results';
