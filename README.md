@@ -33,6 +33,13 @@ If « Anyone » is not offered (some university Google accounts block it), do th
 - Feedback: write it in the **💬 Feedback** box on the master page → *Send to GitHub* → *Submit new issue*. Then tell Claude « check my app feedback ».
 - Need an update live immediately? In script.google.com run **refreshNow**.
 
+## From the master page
+
+- **➕ Add activity**: upload the .html file (for a claude.ai page: download/export it first). It is stored in your Drive and appears at once.
+- **✏️ Edit · 🙈 Hide · 🗑️ Remove**: on each activity card. Removed activities can be restored; results always stay in the Sheet.
+- **⬆️ Upgrade**: shows which features of the current standard (`web/standard.json`) the page has, and sends your choices (Add / Change / Remove / Keep) to Claude as a GitHub issue.
+- **🎬 Videos**: a NotebookLM guide made from the activity (source text + Explainer and Short prompts). Paste the YouTube / Drive links and they show at the top of the activity.
+
 ## Adding an activity (Claude does this)
 
 1. Put the page in `activities/<id>.html`. It must be built by the standard generator, which provides the `report` function.

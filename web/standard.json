@@ -1,0 +1,29 @@
+{
+  "name": "Dr. Khalid's standard for interactive pages",
+  "version": "13 Nov 2026",
+  "note": "Checked automatically where possible. Edit this file (via Claude) when the standard changes.",
+  "features": [
+    { "id": "explain",   "group": "Explanation", "label": "Explanation first: rule cards giving the logic (the why)", "kind": "want", "re": "class=\"(rcard|rules|wcard)" },
+    { "id": "sound",     "group": "Explanation", "label": "🔊 buttons with the device's French voice (pronunciation)", "kind": "want", "re": "speechSynthesis" },
+    { "id": "etym",      "group": "Explanation", "label": "« French in your English » etymology section (accurate)", "kind": "want", "re": "French in your English" },
+    { "id": "colours",   "group": "Explanation", "label": "Colour code: stem blue · ending pink tag · auxiliary green tag, with legend", "kind": "want", "re": "class=\"legend|\\.stm\\{" },
+    { "id": "levels",    "group": "Levels", "label": "Levels: each level trains one thing", "kind": "want", "re": "\"id\":\\s*\"l2\"" },
+    { "id": "mixed",     "group": "Levels", "label": "Final mixed « all together » level", "kind": "want", "re": "\"name\":\\s*\"[^\"]*(ensemble|together|mix|Tout)" },
+    { "id": "menu",      "group": "Levels", "label": "Level menu (cards saying what each level teaches + « All levels »)", "kind": "want", "re": "showPicker" },
+    { "id": "bar",       "group": "Levels", "label": "Level bar always visible above every question", "kind": "want", "re": "lvltabs" },
+    { "id": "short",     "group": "Levels", "label": "Short levels (about 3–5 items each)", "kind": "levelsize", "max": 6 },
+    { "id": "twostep",   "group": "Questions", "label": "Two steps in every level: ① Choose, then ② Write the same answers", "kind": "want", "re": "TWOSTEP\\s*=\\s*true" },
+    { "id": "accents",   "group": "Questions", "label": "Accent keys é è ê à ç ô î ' for written answers", "kind": "want", "re": "class=\"wk\"|\"wk\"" },
+    { "id": "tolerant",  "group": "Questions", "label": "Typed answers ignore capitals, spaces, punctuation, curly apostrophes; accents count; variants accepted", "kind": "want", "re": "const norm=" },
+    { "id": "hints",     "group": "Questions", "label": "1st wrong answer → precise hint naming the fault; 2nd → answer shown", "kind": "want", "re": "Not quite" },
+    { "id": "nav",       "group": "Questions", "label": "← Previous button and clickable dots", "kind": "want", "re": "id=\"prev\"" },
+    { "id": "persona",   "group": "Role-play", "label": "Student plays themselves: first name + « un étudiant / une étudiante » used in every line (dialogue pages)", "kind": "want", "re": "personaReady" },
+    { "id": "name",      "group": "Results", "label": "Name field", "kind": "want", "re": "id=\"sname\"" },
+    { "id": "summary",   "group": "Results", "label": "End summary « Points forts » / « Erreurs à revoir »", "kind": "want", "re": "Points forts" },
+    { "id": "results",   "group": "Results", "label": "Results saved to the master page", "kind": "want", "re": "function report\\s*\\(" },
+    { "id": "lang",      "group": "Style", "label": "French sentences; English instructions and feedback", "kind": "manual" },
+    { "id": "colourful", "group": "Style", "label": "Very colourful page", "kind": "manual" },
+    { "id": "nobook",    "group": "Style", "label": "No sentences or exercises copied from the book", "kind": "manual" },
+    { "id": "yellow",    "group": "Style", "label": "Yellow highlighter or bright filled blocks (rejected style)", "kind": "avoid", "re": "<mark\\b|background:\\s*(yellow|#ff0\\b|#ffff00|#fde047|#facc15|#fef08a)" }
+  ]
+}

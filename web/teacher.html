@@ -7,30 +7,43 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
 <style>
 :root{--bg:#fff8f1;--surface:#fff;--fg:#2b1a14;--muted:#7a5b4e;--line:#f1dfd2;--accent:#c2410c;--accent-soft:#ffe3d3;
- --blue:#2563eb;--blue-s:#dde8ff;--pink:#db2777;--pink-s:#ffe1ef;--teal:#0d9488;--teal-s:#d4f4ee;--violet:#7c3aed;--violet-s:#ece3ff;
+ --blue:#2563eb;--blue-s:#dde8ff;--pink:#db2777;--pink-s:#ffe1ef;--teal:#0d9488;--teal-s:#d4f4ee;--violet:#7c3aed;--violet-s:#ece3ff;--orange:#ea580c;--orange-s:#ffe6d4;
  --good:#16a34a;--good-s:#dcfce7;--warn:#b45309;--warn-s:#fef3c7;--bad:#dc2626;--bad-s:#fee2e2}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 "Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif}
 .wrap{max-width:1150px;margin:0 auto;padding:24px 16px 60px;display:flex;flex-direction:column;gap:22px}
-h1,h2{font-family:"Bricolage Grotesque",system-ui,sans-serif;margin:0;line-height:1.1}
+h1,h2,h3{font-family:"Bricolage Grotesque",system-ui,sans-serif;margin:0;line-height:1.15}
 h1{font-size:clamp(1.8rem,5vw,2.7rem)}
 h1 span{display:inline-block;padding:0 .18em;border-radius:.2em;background:var(--blue-s);color:var(--blue);transform:rotate(-1.5deg)}
-h2{font-size:1.35rem}
+h2{font-size:1.35rem} h3{font-size:1.1rem}
 .eyebrow{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--accent)}
-.bar{display:flex;flex-wrap:wrap;gap:10px}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .btn{font:inherit;font-weight:700;padding:9px 16px;border-radius:999px;border:2px solid var(--c,var(--accent));background:var(--s,var(--accent-soft));color:var(--c,var(--accent));cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
 .btn.solid{background:var(--c,var(--accent));color:#fff}
+.btn:disabled{opacity:.5;cursor:default}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
 .stat{background:var(--s);border-radius:16px;padding:12px 16px;border-left:6px solid var(--c)}
 .stat b{display:block;font:800 2rem "Bricolage Grotesque",system-ui,sans-serif;color:var(--c);font-variant-numeric:tabular-nums}
 .stat span{font-size:.88rem}
 .panel{background:var(--surface);border:2px solid var(--line);border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:12px}
-.acts{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:10px}
-.act{background:var(--s);border-radius:14px;padding:10px 12px;display:flex;flex-direction:column;gap:6px}
-.act b{color:var(--c)}
-.act .row{display:flex;gap:6px}
-.act input{flex:1;min-width:0;font:inherit;font-size:.8rem;padding:6px 8px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--muted)}
-.act button,.act a{font:inherit;font-size:.82rem;font-weight:700;border:none;border-radius:8px;padding:6px 10px;background:var(--c);color:#fff;cursor:pointer;text-decoration:none}
+.acts{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px}
+.act{background:var(--s);border-radius:16px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;border-top:6px solid var(--c)}
+.act.hid{opacity:.75;background:repeating-linear-gradient(135deg,var(--s),var(--s) 12px,#fff 12px,#fff 18px)}
+.act .t{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.act .t b{color:var(--c);font:800 1.08rem "Bricolage Grotesque",system-ui,sans-serif}
+.badge{font-size:.72rem;font-weight:800;border-radius:999px;padding:1px 8px;background:#fff;color:var(--muted);border:1px solid var(--line)}
+.row{display:flex;gap:6px;flex-wrap:wrap}
+.row input{flex:1 1 160px;min-width:0;font:inherit;font-size:.8rem;padding:6px 8px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--muted)}
+.sm{font:inherit;font-size:.82rem;font-weight:700;border:none;border-radius:8px;padding:6px 10px;background:var(--c);color:#fff;cursor:pointer;text-decoration:none;white-space:nowrap}
+.sm.g{background:#fff;color:var(--c);border:2px solid var(--c);padding:4px 9px}
+.sm.red{background:#fff;color:var(--bad);border:2px solid var(--bad);padding:4px 9px}
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.form label{display:flex;flex-direction:column;gap:4px;font-weight:700;font-size:.88rem}
+.form input,.form select,.form textarea,textarea.big{font:inherit;font-weight:400;padding:8px 10px;border-radius:10px;border:2px solid var(--line);background:#fff;color:var(--fg)}
+textarea.big{width:100%;min-height:110px;resize:vertical;font-size:.88rem}
+.drop{border:3px dashed var(--orange);background:var(--orange-s);border-radius:16px;padding:14px;text-align:center;font-weight:700;color:var(--orange);cursor:pointer}
+.msg{border-radius:12px;padding:10px 14px;font-weight:700}
+.msg.ok{background:var(--good-s);color:var(--good)} .msg.warn{background:var(--warn-s);color:var(--warn)} .msg.bad{background:var(--bad-s);color:var(--bad)}
 .filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .filters select,.filters input{font:inherit;padding:7px 10px;border-radius:10px;border:2px solid var(--line);background:#fff;color:var(--fg)}
 .tabs{display:flex;gap:6px}
@@ -38,9 +51,8 @@ h2{font-size:1.35rem}
 .tab.on{background:var(--accent);border-color:var(--accent);color:#fff}
 .tscroll{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:.92rem;min-width:720px}
-th{text-align:left;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:8px;border-bottom:2px solid var(--line);position:sticky;top:0;background:#fff}
+th{text-align:left;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:8px;border-bottom:2px solid var(--line);background:#fff}
 td{padding:8px;border-bottom:1px solid var(--line);vertical-align:top}
-tr:hover td{background:#fffaf5}
 .pill{display:inline-block;min-width:52px;text-align:center;font-weight:800;border-radius:999px;padding:2px 10px;font-variant-numeric:tabular-nums}
 .p-good{background:var(--good-s);color:var(--good)}.p-mid{background:var(--warn-s);color:var(--warn)}.p-bad{background:var(--bad-s);color:var(--bad)}
 .nm{font-weight:700;color:var(--blue)}.anon{color:var(--muted);font-style:italic}
@@ -48,8 +60,26 @@ details summary{cursor:pointer;color:var(--pink);font-weight:700}
 details pre{white-space:pre-wrap;font:inherit;font-size:.85rem;margin:6px 0 0;background:var(--pink-s);border-radius:10px;padding:8px 10px}
 .muted{color:var(--muted)}
 .fb{background:linear-gradient(135deg,#fff1f8,#eef4ff);border:3px dashed #e9a8cf}
-.fb textarea{font:inherit;width:100%;min-height:90px;border-radius:12px;border:2px solid #e9a8cf;padding:10px;resize:vertical}
 .load{padding:20px;text-align:center;color:var(--muted)}
+/* dialogs */
+.ov{position:fixed;inset:0;background:rgba(43,26,20,.45);display:none;align-items:flex-start;justify-content:center;padding:20px 10px;overflow:auto;z-index:50}
+.ov.on{display:flex}
+.dlg{background:var(--bg);border-radius:22px;max-width:980px;width:100%;padding:18px;display:flex;flex-direction:column;gap:14px;border:3px solid var(--c,var(--accent))}
+.dlg .head{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.x{font:inherit;font-size:1.4rem;border:none;background:none;cursor:pointer;color:var(--muted)}
+.ft{width:100%;border-collapse:collapse;min-width:640px}
+.ft td{background:#fff}
+.ft tr.grp td{background:var(--violet-s);color:var(--violet);font-weight:800;font-family:"Bricolage Grotesque",system-ui,sans-serif}
+.st{font-weight:800;white-space:nowrap}
+.st.y{color:var(--good)} .st.n{color:var(--bad)} .st.c{color:var(--warn)}
+.ft select{font:inherit;padding:4px 6px;border-radius:8px;border:2px solid var(--line)}
+.ft select.add{border-color:var(--good);background:var(--good-s)} .ft select.chg{border-color:var(--warn);background:var(--warn-s)} .ft select.rem{border-color:var(--bad);background:var(--bad-s)}
+.ft input{font:inherit;font-size:.85rem;width:100%;padding:4px 6px;border-radius:8px;border:1px solid var(--line)}
+.step{display:grid;grid-template-columns:38px 1fr;gap:12px;background:#fff;border-left:6px solid var(--c);border-radius:0 14px 14px 0;padding:12px}
+.num{width:34px;height:34px;border-radius:50%;background:var(--c);color:#fff;display:grid;place-items:center;font:800 1.05rem "Bricolage Grotesque",system-ui,sans-serif}
+.step ol,.step ul{margin:4px 0 0;padding-left:20px}
+.copybox{display:flex;flex-direction:column;gap:6px}
+.copybox textarea{width:100%;min-height:150px;font:inherit;font-size:.85rem;padding:10px;border-radius:12px;border:2px solid var(--c);background:var(--s)}
 </style>
 </head>
 <body>
@@ -63,14 +93,16 @@ details pre{white-space:pre-wrap;font:inherit;font-size:.85rem;margin:6px 0 0;ba
     <button class="btn solid" id="refresh">🔄 Refresh</button>
     <a class="btn" style="--c:var(--good);--s:var(--good-s)" id="sheet" target="_blank">📊 Open the Sheet</a>
     <a class="btn" style="--c:var(--blue);--s:var(--blue-s)" id="home" target="_blank">🎒 Student page</a>
+    <button class="btn" style="--c:var(--orange);--s:var(--orange-s)" id="addOpen">➕ Add activity</button>
     <a class="btn" style="--c:var(--pink);--s:var(--pink-s)" href="#feedback">💬 Feedback / request an update</a>
   </div>
 
   <div class="stats" id="stats"></div>
 
   <section class="panel">
-    <h2>🔗 My activities</h2>
+    <div class="bar" style="justify-content:space-between"><h2>🔗 My activities</h2><span class="muted" style="font-size:.85rem">🐙 = added by Claude (GitHub) · 📁 = added by you (Drive)</span></div>
     <div class="acts" id="acts"></div>
+    <details id="removedBox"><summary>🗑️ Removed activities</summary><div class="acts" id="removed" style="margin-top:10px"></div></details>
   </section>
 
   <section class="panel">
@@ -90,42 +122,207 @@ details pre{white-space:pre-wrap;font:inherit;font-size:.85rem;margin:6px 0 0;ba
   <section class="panel fb" id="feedback">
     <h2>💬 Feedback for Claude</h2>
     <p class="muted">Write what you want changed (in the app, an activity, this page…). It opens a GitHub issue; press <b>Submit new issue</b> there. Then tell Claude « check my app feedback ».</p>
-    <textarea id="fbText" placeholder="Example: In the results table, also show which level each student finished first…"></textarea>
-    <div class="bar"><button class="btn solid" style="--c:var(--pink)" id="fbSend">📨 Send to GitHub</button><a class="btn" id="fbList" target="_blank">📚 See all my feedback</a></div>
+    <textarea class="big" id="fbText" placeholder="Example: In the results table, also show which level each student finished first…"></textarea>
+    <div class="bar"><button class="btn solid" style="--c:var(--pink)" id="fbSend">📨 Send to GitHub</button><a class="btn" id="fbList" target="_blank">📚 See all my feedback &amp; requests</a></div>
+    <p class="muted" style="font-size:.8rem;margin:0" id="ver"></p>
   </section>
 </div>
+
+<!-- ➕ Add activity -->
+<div class="ov" id="addOv"><div class="dlg" style="--c:var(--orange)">
+  <div class="head"><h2>➕ Add an activity</h2><button class="x" data-close="addOv">✕</button></div>
+  <label class="drop" id="drop">📄 Choose the activity's .html file (or drop it here)<input type="file" id="file" accept=".html,.htm,text/html" hidden></label>
+  <details><summary>…or paste the page's code</summary><textarea class="big" id="paste" placeholder="<!DOCTYPE html> …"></textarea></details>
+  <div class="form">
+    <label>Title<input id="aTitle" placeholder="Je te présente…"></label>
+    <label>Emoji<input id="aEmoji" value="📘" maxlength="4"></label>
+    <label>Topic<input id="aTopic" placeholder="Saluer, se présenter · OD1 D1 U1"></label>
+    <label>For (cohort / level)<input id="aFor" placeholder="BAIRSS · A1"></label>
+  </div>
+  <label style="font-weight:700"><input type="checkbox" id="aHidden"> 🙈 Hide from the student page for now (only the direct link works)</label>
+  <div id="addMsg"></div>
+  <div class="bar"><button class="btn solid" style="--c:var(--orange)" id="addGo">➕ Add</button><span class="muted" style="font-size:.85rem">For a claude.ai activity: open it, download / export it as HTML, then choose that file here.</span></div>
+</div></div>
+
+<!-- ⬆️ Upgrade -->
+<div class="ov" id="upOv"><div class="dlg" style="--c:var(--violet)">
+  <div class="head"><h2 id="upTitle">⬆️ Upgrade to the newest format</h2><button class="x" data-close="upOv">✕</button></div>
+  <p class="muted" style="margin:0" id="upInfo"></p>
+  <div class="bar"><button class="btn" style="--c:var(--good);--s:var(--good-s)" id="upAll">✨ Full upgrade: add everything missing</button><button class="btn" style="--c:var(--muted);--s:#fff" id="upNone">↺ Reset choices</button></div>
+  <div class="tscroll"><table class="ft"><thead><tr><th>Feature</th><th>Now</th><th>What to do</th><th>Note for Claude (optional)</th></tr></thead><tbody id="upBody"><tr><td colspan="4" class="load">Checking the page…</td></tr></tbody></table></div>
+  <label style="font-weight:700">Anything else to change, add or remove?<textarea class="big" id="upNote" placeholder="Example: add a level on « vous » questions; remove level 3; use names of African officers in the dialogues…"></textarea></label>
+  <div class="bar"><button class="btn solid" style="--c:var(--violet)" id="upSend">📨 Send the upgrade request to Claude</button><span class="muted" style="font-size:.85rem">Opens GitHub: press <b>Submit new issue</b>, then tell Claude « check my app feedback ». The link stays the same after the upgrade.</span></div>
+</div></div>
+
+<!-- 🎬 Videos -->
+<div class="ov" id="vidOv"><div class="dlg" style="--c:var(--pink)">
+  <div class="head"><h2 id="vidTitle">🎬 Videos with NotebookLM</h2><button class="x" data-close="vidOv">✕</button></div>
+  <div id="vidSteps" style="display:flex;flex-direction:column;gap:10px"><div class="load">Reading the activity…</div></div>
+</div></div>
+
 <script>
 /*__DATA__*/
-var D=window.DATA||{activities:[]},ROWS=[],VIEW='all';
-var COL=[['--blue','--blue-s'],['--pink','--pink-s'],['--teal','--teal-s'],['--violet','--violet-s']];
+var D=window.DATA||{activities:[]},ROWS=[],VIEW='all',ACTS=D.activities||[];
+var COL=[['--blue','--blue-s'],['--pink','--pink-s'],['--teal','--teal-s'],['--violet','--violet-s'],['--orange','--orange-s']];
 var $=function(id){return document.getElementById(id)};
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function run(){return (window.google&&google.script&&google.script.run)?google.script.run:null}
 $('sheet').href=D.sheet;$('home').href=D.url;$('fbList').href=D.repo+'/issues';
+$('ver').textContent='App version '+(D.version||'1.0')+(D.standard?' · Standard of '+D.standard.version:'');
+document.querySelectorAll('[data-close]').forEach(function(b){b.onclick=function(){$(b.dataset.close).classList.remove('on')}});
+document.querySelectorAll('.ov').forEach(function(o){o.addEventListener('click',function(e){if(e.target===o)o.classList.remove('on')})});
+function findAct(id){return ACTS.filter(function(a){return a.id===id})[0]}
+function link(a){return D.url+'?a='+encodeURIComponent(a.id)}
 
-$('acts').innerHTML=D.activities.map(function(a,i){var c=COL[i%4],link=D.url+'?a='+encodeURIComponent(a.id);
- return '<div class="act" style="--c:var('+c[0]+');--s:var('+c[1]+')"><b>'+(a.emoji||'📘')+' '+esc(a.title)+'</b>'
- +'<span class="muted" style="font-size:.85rem">'+esc(a.topic||'')+(a.for?' · '+esc(a.for):'')+(a.hidden?' · 🙈 hidden from student page':'')+'</span>'
- +'<div class="row"><input readonly value="'+esc(link)+'"><button data-copy="'+esc(link)+'">Copy</button><a href="'+esc(link)+'" target="_blank">Open</a></div></div>'}).join('');
-document.addEventListener('click',function(e){var b=e.target.closest('[data-copy]');if(!b)return;var inp=b.parentNode.querySelector('input');
- function done(){b.textContent='✓ Copied';setTimeout(function(){b.textContent='Copy'},1500)}
- if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(b.dataset.copy).then(done,function(){inp.select();document.execCommand('copy');done()})}else{inp.select();document.execCommand('copy');done()}});
+// ---------- activity cards ----------
+function card(a,i){var c=COL[i%COL.length],L=link(a);
+ if(a.removed)return '<div class="act" style="--c:var(--muted);--s:#fff"><div class="t"><b>'+esc(a.emoji||'📘')+' '+esc(a.title)+'</b></div><div class="row"><button class="sm" data-act="restore" data-id="'+esc(a.id)+'">♻️ Restore</button></div></div>';
+ return '<div class="act'+(a.hidden?' hid':'')+'" style="--c:var('+c[0]+');--s:var('+c[1]+')" data-card="'+esc(a.id)+'">'
+ +'<div class="t"><b>'+esc(a.emoji||'📘')+' '+esc(a.title)+'</b><span class="badge">'+(a.source==='drive'?'📁 Drive':'🐙 GitHub')+'</span>'+(a.hidden?'<span class="badge">🙈 hidden</span>':'')+((a.video||a.short)?'<span class="badge">🎬 video</span>':'')+'</div>'
+ +'<span class="muted" style="font-size:.85rem">'+esc(a.topic||'')+(a['for']?' · '+esc(a['for']):'')+'</span>'
+ +'<div class="row"><input readonly value="'+esc(L)+'"><button class="sm" data-copy="'+esc(L)+'">Copy</button><a class="sm" href="'+esc(L)+'" target="_blank">Open</a></div>'
+ +'<div class="row"><button class="sm g" data-act="edit" data-id="'+esc(a.id)+'">✏️ Edit</button><button class="sm g" data-act="hide" data-id="'+esc(a.id)+'">'+(a.hidden?'👁 Show':'🙈 Hide')+'</button>'
+ +'<button class="sm g" data-act="video" data-id="'+esc(a.id)+'">🎬 Videos</button><button class="sm g" data-act="upgrade" data-id="'+esc(a.id)+'">⬆️ Upgrade</button><button class="sm red" data-act="remove" data-id="'+esc(a.id)+'">🗑️ Remove</button></div>'
+ +'<div class="edit" hidden></div></div>'}
+function renderActs(){var live=ACTS.filter(function(a){return !a.removed}),gone=ACTS.filter(function(a){return a.removed});
+ $('acts').innerHTML=live.length?live.map(card).join(''):'<div class="load">No activity yet: click ➕ Add activity.</div>';
+ $('removed').innerHTML=gone.map(card).join('');$('removedBox').style.display=gone.length?'':'none';
+ var cur=$('fAct').value;$('fAct').innerHTML='<option value="">All activities</option>'+ACTS.map(function(a){return '<option value="'+esc(a.id)+'">'+esc(a.title)+(a.removed?' (removed)':'')+'</option>'}).join('');$('fAct').value=cur}
+function setActs(list){ACTS=list||ACTS;renderActs()}
+function call(fn,args,ok,btn){var r=run();if(!r){alert('Preview mode: not connected.');return}
+ if(btn){btn.disabled=true;btn.dataset.t=btn.textContent;btn.textContent='⏳ …'}
+ r=r.withSuccessHandler(function(x){if(btn){btn.disabled=false;btn.textContent=btn.dataset.t}ok&&ok(x)}).withFailureHandler(function(e){if(btn){btn.disabled=false;btn.textContent=btn.dataset.t}alert('Sorry, that did not work: '+(e&&e.message||e))});
+ r[fn].apply(r,args)}
 
-D.activities.forEach(function(a){var o=document.createElement('option');o.value=a.id;o.textContent=a.title;$('fAct').appendChild(o)});
+document.addEventListener('click',function(e){
+ var cp=e.target.closest('[data-copy]');
+ if(cp){var inp=(cp.closest('.copybox,.row')||cp.parentNode).querySelector('input,textarea');var txt=cp.dataset.copy||(inp&&inp.value)||'';
+  var done=function(){var t=cp.textContent;cp.textContent='✓ Copied';setTimeout(function(){cp.textContent=t},1400)};
+  var fall=function(){if(inp){inp.select();document.execCommand('copy')}done()};
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(txt).then(done,fall);else fall();return}
+ var b=e.target.closest('[data-act]');if(!b)return;var id=b.dataset.id,a=findAct(id),act=b.dataset.act;
+ if(act==='hide')call('updateActivity',[D.key,id,{hidden:!a.hidden}],setActs,b);
+ else if(act==='remove'){if(confirm('Remove « '+a.title+' »?\n\nStudents will no longer see it. Its past results stay in your Sheet, and you can restore it from « Removed activities ».'))call('updateActivity',[D.key,id,{removed:true}],setActs,b)}
+ else if(act==='restore')call('updateActivity',[D.key,id,{removed:false}],setActs,b);
+ else if(act==='edit')openEdit(a,b);
+ else if(act==='upgrade')openUpgrade(a);
+ else if(act==='video')openVideos(a);
+});
+function openEdit(a,b){var box=b.closest('.act').querySelector('.edit');if(!box.hidden){box.hidden=true;return}
+ box.hidden=false;box.innerHTML='<div class="form"><label>Title<input data-f="title" value="'+esc(a.title)+'"></label><label>Emoji<input data-f="emoji" value="'+esc(a.emoji||'')+'"></label><label>Topic<input data-f="topic" value="'+esc(a.topic||'')+'"></label><label>For<input data-f="for" value="'+esc(a['for']||'')+'"></label></div><div class="row" style="margin-top:8px"><button class="sm">💾 Save</button></div>';
+ box.querySelector('button').onclick=function(){var p={};box.querySelectorAll('[data-f]').forEach(function(i){p[i.dataset.f]=i.value.trim()});call('updateActivity',[D.key,a.id,p],setActs,this)}}
+
+// ---------- ➕ add ----------
+var NEW_HTML='';
+$('addOpen').onclick=function(){$('addOv').classList.add('on')};
+function takeHtml(h,fname){NEW_HTML=h;var m=h.match(/<title>([^<]*)<\/title>/i);if(m&&!$('aTitle').value)$('aTitle').value=m[1].trim();
+ var ok=/function report\s*\(/.test(h);
+ $('addMsg').innerHTML=(fname?'<p class="muted" style="margin:0 0 6px">📄 '+esc(fname)+' · '+Math.round(h.length/1024)+' kB</p>':'')+(ok?'<div class="msg ok">✅ Standard page: results will be saved to this master page.</div>':'<div class="msg warn">⚠️ This page will open for students, but its results will NOT be saved (it was not built with the standard generator). After adding it, use ⬆️ Upgrade to ask Claude to convert it.</div>')}
+$('file').onchange=function(){var f=this.files[0];if(!f)return;var r=new FileReader();r.onload=function(){takeHtml(String(r.result),f.name)};r.readAsText(f,'utf-8')};
+var dz=$('drop');dz.addEventListener('dragover',function(e){e.preventDefault()});dz.addEventListener('drop',function(e){e.preventDefault();var f=e.dataTransfer.files[0];if(f){var r=new FileReader();r.onload=function(){takeHtml(String(r.result),f.name)};r.readAsText(f,'utf-8')}});
+$('paste').oninput=function(){if(this.value.trim().length>50)takeHtml(this.value,'')};
+$('addGo').onclick=function(){var h=NEW_HTML||$('paste').value;if(!h||h.length<50){$('addMsg').innerHTML='<div class="msg bad">Choose the .html file (or paste the page code) first.</div>';return}
+ if(!$('aTitle').value.trim()){$('aTitle').focus();return}
+ var meta={title:$('aTitle').value.trim(),emoji:$('aEmoji').value.trim(),topic:$('aTopic').value.trim(),'for':$('aFor').value.trim(),hidden:$('aHidden').checked};
+ call('addActivity',[D.key,meta,h],function(list){setActs(list);$('addOv').classList.remove('on');NEW_HTML='';['aTitle','aTopic','aFor','paste'].forEach(function(i){$(i).value=''});$('file').value='';$('addMsg').innerHTML='';
+  var n=list[list.length-1];setTimeout(function(){var c=document.querySelector('[data-card="'+n.id+'"]');if(c){c.scrollIntoView({behavior:'smooth',block:'center'});c.style.outline='4px solid var(--good)'}},100)},this)};
+
+// ---------- ⬆️ upgrade ----------
+var UP={a:null,res:[]};
+function audit(html){var S=D.standard||{features:[]};return S.features.map(function(f){var st,def;
+ if(f.kind==='manual'){st='c';def='keep'}
+ else if(f.kind==='levelsize'){var cnt={},re=/"sec":\s*"(l\d+)"/g,m;while((m=re.exec(html)))cnt[m[1]]=(cnt[m[1]]||0)+1;var ks=Object.keys(cnt);
+  if(!ks.length){st='c';def='keep'}else{var mx=Math.max.apply(null,ks.map(function(k){return cnt[k]}));f.found='longest level: '+mx+' items';st=mx<=f.max?'y':'n';def=st==='y'?'keep':'change'}}
+ else{var has=new RegExp(f.re,'i').test(html);
+  if(f.kind==='avoid'){st=has?'n':'y';def=has?'remove':'keep'}else{st=has?'y':'n';def=has?'keep':'add'}}
+ return {f:f,st:st,def:def}})}
+var ST={y:'✅ ok',n:'❌',c:'⚠️ check'};
+function stText(r){if(r.f.kind==='avoid')return r.st==='y'?'✅ none':'❌ present';if(r.f.kind==='levelsize'&&r.f.found)return (r.st==='y'?'✅ ':'❌ ')+r.f.found;return r.st==='y'?'✅ present':r.st==='n'?'❌ missing':'⚠️ check yourself'}
+function openUpgrade(a){UP.a=a;$('upTitle').textContent='⬆️ Upgrade « '+a.title+' »';$('upInfo').textContent='Checked against: '+((D.standard&&D.standard.name)||'the standard')+' ('+((D.standard&&D.standard.version)||'')+'). Choose what Claude should do with each feature.';
+ $('upBody').innerHTML='<tr><td colspan="4" class="load">Checking the page…</td></tr>';$('upNote').value='';$('upOv').classList.add('on');
+ call('getActivitySource',[D.key,a.id],function(html){UP.res=audit(html);drawUp()})}
+function drawUp(){var g='';$('upBody').innerHTML=UP.res.map(function(r,k){var head=r.f.group!==g?'<tr class="grp"><td colspan="4">'+esc(r.f.group)+'</td></tr>':'';g=r.f.group;
+ return head+'<tr><td>'+esc(r.f.label)+'</td><td class="st '+r.st+'">'+esc(stText(r))+'</td><td><select data-k="'+k+'">'+[['keep','Keep as it is'],['add','➕ Add'],['change','✏️ Change / improve'],['remove','🗑️ Remove']].map(function(o){return '<option value="'+o[0]+'"'+(o[0]===r.def?' selected':'')+'>'+o[1]+'</option>'}).join('')+'</select></td><td><input data-n="'+k+'" placeholder="e.g. how exactly"></td></tr>'}).join('');
+ $('upBody').querySelectorAll('select').forEach(function(s){var paint=function(){s.className=s.value==='add'?'add':s.value==='change'?'chg':s.value==='remove'?'rem':''};paint();s.onchange=paint})}
+$('upAll').onclick=function(){UP.res.forEach(function(r){if(r.st==='n')r.def=r.f.kind==='avoid'?'remove':r.f.kind==='levelsize'?'change':'add'});drawUp()};
+$('upNone').onclick=function(){UP.res.forEach(function(r){r.def=r.st==='n'?(r.f.kind==='avoid'?'remove':r.f.kind==='levelsize'?'change':'add'):'keep'});drawUp()};
+$('upSend').onclick=function(){var a=UP.a;if(!a)return;var lines={add:[],change:[],remove:[],keep:[]};
+ UP.res.forEach(function(r,k){var v=$('upBody').querySelector('[data-k="'+k+'"]').value,n=$('upBody').querySelector('[data-n="'+k+'"]').value.trim();lines[v].push('- '+r.f.label+' _('+stText(r).replace(/^[^\w]+/,'')+')_'+(n?' — '+n:''))});
+ var body='**Activity:** '+a.title+' (`'+a.id+'`)\n**Source:** '+(a.source==='drive'?'Drive file `'+a.fileId+'` (added from the master page)':'GitHub `activities/'+(a.file||a.id+'.html')+'`')+'\n**Link:** '+link(a)+'\n**Standard:** '+((D.standard&&D.standard.version)||'')+'\n\n'
+  +(lines.add.length?'### ➕ Add\n'+lines.add.join('\n')+'\n\n':'')+(lines.change.length?'### ✏️ Change / improve\n'+lines.change.join('\n')+'\n\n':'')+(lines.remove.length?'### 🗑️ Remove\n'+lines.remove.join('\n')+'\n\n':'')
+  +($('upNote').value.trim()?'### 📝 Other requests\n'+$('upNote').value.trim()+'\n\n':'')+'<details><summary>Keep as it is ('+lines.keep.length+')</summary>\n\n'+lines.keep.join('\n')+'\n</details>\n\n— sent from the master page, '+new Date().toLocaleString('en-GB');
+ window.open(D.repo+'/issues/new?labels=upgrade&title='+encodeURIComponent('Upgrade: '+a.title)+'&body='+encodeURIComponent(body),'_blank')};
+
+// ---------- 🎬 NotebookLM videos ----------
+function txt(el){return el?el.textContent.replace(/🔊/g,'').replace(/\s+/g,' ').trim():''}
+function jsonVar(html,name){var m=html.match(new RegExp('const\\s+'+name+'\\s*=\\s*(\\[[\\s\\S]*?\\]|\\{[\\s\\S]*?\\});\\s*\\n'));if(!m)return null;try{return JSON.parse(m[1])}catch(e){return null}}
+function untok(s){return String(s||'').replace(/@@N/g,'Kavya').replace(/\[\[([^|\]]*)\|([^\]]*)\]\]/g,'$1 / $2').replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim()}
+function lessonNotes(a,html){var doc=new DOMParser().parseFromString(html,'text/html'),out=[];
+ out.push(a.title.toUpperCase()+' — lesson notes for a French class (A1–A2)');
+ var eb=doc.querySelector('.eyebrow');if(eb)out.push('Course: '+txt(eb));if(a.topic)out.push('Topic: '+a.topic);
+ var intro=doc.querySelector('.hero p');if(intro)out.push('','ABOUT THE ACTIVITY',txt(intro));
+ var learn=doc.querySelector('.learn')||doc.body,rules=[],etym=[],inEt=false;
+ learn.querySelectorAll('h2, .rcard, .card, .wcard, .step').forEach(function(el){if(el.tagName==='H2'){inEt=/English/i.test(el.textContent);return}
+  var h=el.querySelector('h3'),title=txt(h),parts=[];el.querySelectorAll('p, .pair, li').forEach(function(p){if(p.closest('.pair')&&p.tagName!=='DIV'&&!p.classList.contains('pair'))return;var t=txt(p);if(p.classList.contains('pair'))t=t.replace(/[\u0900-\u097F]+(\s*·\s*)?/g,'').replace(/\s+/g,' ').trim();if(t&&t!==title)parts.push(t)});
+  (inEt?etym:rules).push({t:title,p:parts})});
+ if(rules.length){out.push('','THE RULES (explain them in this order)');rules.forEach(function(r,i){out.push((i+1)+'. '+r.t);r.p.forEach(function(p){out.push('   • '+p)})})}
+ if(etym.length){out.push('','FRENCH IN YOUR ENGLISH (word history — fun facts)');etym.forEach(function(r){out.push('• '+r.t+': '+r.p.join(' '))})}
+ var secs=jsonVar(html,'ALLSECS')||[],Q=jsonVar(html,'Q')||[];
+ if(secs.length){out.push('','THE ACTIVITY: LEVELS');secs.forEach(function(s){out.push('• '+untok(s.name)+' — '+untok(s.learn))})}
+ var mist=[],seen={};Q.forEach(function(q){Object.keys(q.o||{}).slice(0,1).forEach(function(k){var e=untok(q.o[k]);if(!seen[e]&&mist.length<8){seen[e]=1;mist.push('• Wrong: « '+untok(k)+' » → '+e)}})});
+ if(Q.length){out.push('','MODEL ANSWERS (examples to use in the video)');secs.forEach(function(s){Q.filter(function(q){return q.sec===s.id}).slice(0,3).forEach(function(q){var sent=q.s&&q.s.indexOf('___')>-1?q.s.replace('___',q.a):q.a;out.push('• '+untok(sent)+'  ('+untok(q.why)+')')})})}
+ if(mist.length)out.push('','COMMON MISTAKES STUDENTS MAKE',mist.join('\n'));
+ out.push('','Students are university students in India (Rashtriya Raksha University, Gandhinagar), some of them security officers from African countries. They speak English; many speak Hindi.');
+ return {notes:out.join('\n'),rules:rules.map(function(r){return clean(r.t)}),levels:secs.map(function(s){return untok(s.name).replace(/^[^A-Za-zÀ-ÿ]+/,'')})}}
+function clean(t){return String(t).replace(/^\d+\s*[·.)-]\s*/,'').replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}\u{200D}]/gu,'').replace(/\s+/g,' ').trim()}
+function prompts(a,L){var rl=L.rules.length?L.rules.map(function(r,i){return (i+1)+') '+r}).join('; '):'the rules in the source',main=L.rules[0]||a.title;
+ var ex='Make an EXPLAINER video for beginner (A1–A2) students of French at an Indian university.\n'
+ +'LANGUAGE: narrate in simple, clear English. Say every French word and sentence slowly and correctly in French, and show it on screen.\n'
+ +'SOURCE: use ONLY the source « '+a.title+' — lesson notes ». Do not add rules, words or examples that are not in it.\n'
+ +'STRUCTURE (follow this order):\n'
+ +'1. Hook (15 seconds): a real-life situation where students need this French.\n'
+ +'2. The rules, one at a time, in this order: '+rl+'. For each rule: show the form, explain WHY it is like that, and give 2 examples from the source.\n'
+ +'3. Common mistakes: show 3 of the mistakes listed in the source and correct them.\n'
+ +'4. Word history: one or two « French in your English » facts, if the source has them.\n'
+ +'5. Recap: all the rules together on one screen.\n'
+ +'6. End: invite students to practise with the activity « '+a.title+' »'+(L.levels.length?' and name its levels: '+L.levels.join(' / '):'')+'.\n'
+ +'TONE: a friendly teacher speaking to beginners; short sentences; explain any grammar word you use. Keep the French on screen large and highlight the key part (ending, little word) in colour.';
+ var sh='Make a SHORT video (about 60 seconds) for beginner (A1–A2) students of French.\n'
+ +'ONE idea only: '+main+'.\n'
+ +'Use ONLY the source « '+a.title+' — lesson notes ».\n'
+ +'1. Open with a quick question that hooks (« How do you say … in French? »).\n'
+ +'2. Show the rule with 2 short examples from the source; say the French slowly and show it on screen.\n'
+ +'3. One common mistake and its correction.\n'
+ +'4. Finish with: « Now try the activity « '+a.title+' » ».\n'
+ +'Narrate in simple English. Energetic, clear, no extra information.';
+ return {ex:ex,sh:sh}}
+function openVideos(a){$('vidTitle').textContent='🎬 Videos for « '+a.title+' »';$('vidSteps').innerHTML='<div class="load">Reading the activity…</div>';$('vidOv').classList.add('on');
+ call('getActivitySource',[D.key,a.id],function(html){var L=lessonNotes(a,html),P=prompts(a,L);
+  var st=function(n,c,title,body){return '<div class="step" style="--c:var('+c+')"><div class="num">'+n+'</div><div><h3>'+title+'</h3>'+body+'</div></div>'};
+  var box=function(c,v){return '<div class="copybox" style="--c:var('+c[0]+');--s:var('+c[1]+')"><textarea>'+esc(v)+'</textarea><div><button class="sm" style="--c:var('+c[0]+')" data-copy="">📋 Copy</button></div></div>'};
+  $('vidSteps').innerHTML=
+   st(1,'--blue','Open NotebookLM and create a notebook','<ol><li>Go to <a href="https://notebooklm.google.com" target="_blank"><b>notebooklm.google.com</b></a> → <b>+ Create new</b> (new notebook).</li><li>Name it « '+esc(a.title)+' ».</li></ol>')
+   +st(2,'--teal','Add the lesson notes as the source','<ol><li>In <b>Add sources</b>, choose <b>Copied text</b> (or "Paste text").</li><li>Click 📋 Copy below, paste it there, then <b>Insert</b>. It is built automatically from your activity: rules, examples, levels and common mistakes.</li></ol>'+box(['--teal','--teal-s'],L.notes))
+   +st(3,'--violet','Make the EXPLAINER video','<ol><li>In the <b>Studio</b> panel (right), click the ✏️ pencil on <b>Video Overview</b>.</li><li><b>Format:</b> Explainer · <b>Language:</b> English · <b>Visual style:</b> Whiteboard (clearest for grammar) or Classic.</li><li>Copy the prompt below into the box « What should the AI hosts focus on? », then <b>Generate</b>. It takes several minutes; you can leave the page.</li></ol>'+box(['--violet','--violet-s'],P.ex))
+   +st(4,'--pink','Make the SHORT video','<ol><li>Click the ✏️ pencil on <b>Video Overview</b> again.</li><li><b>Format:</b> Short (called <b>Brief</b> in some versions) · <b>Language:</b> English.</li><li>Paste this prompt, then <b>Generate</b>. Tip: the short video takes the <b>first</b> rule; you can change « ONE idea only » in the box before copying.</li></ol>'+box(['--pink','--pink-s'],P.sh))
+   +st(5,'--orange','Check, then share each video','<ol><li>Watch it once: check every French word and rule. If something is wrong, delete it and generate again with a note (e.g. « Say « vous » more clearly »).</li><li>Click <b>⋮</b> on the video → <b>Download</b>.</li><li>Upload it to <b>YouTube</b> as <b>Unlisted</b> (best: it plays inside the activity) or to <b>Google Drive</b> → Share → <b>Anyone with the link</b>.</li><li>Copy the video link.</li></ol>')
+   +st(6,'--good','Paste the links here','<div class="form"><label>📺 Explainer video link<input id="vLong" value="'+esc(a.video||'')+'" placeholder="https://youtu.be/…"></label><label>⚡ Short video link<input id="vShort" value="'+esc(a.short||'')+'" placeholder="https://youtube.com/shorts/…"></label></div><div class="row" style="margin-top:8px"><button class="sm" style="--c:var(--good)" id="vSave">💾 Save: show them at the top of the activity</button></div><p class="muted" style="font-size:.85rem;margin:6px 0 0">Students see a « 🎬 Watch first » box at the top of the activity. Leave a box empty to remove that video.</p>');
+  $('vSave').onclick=function(){call('updateActivity',[D.key,a.id,{video:$('vLong').value.trim(),'short':$('vShort').value.trim()}],function(l){setActs(l);$('vSave').textContent='✓ Saved';setTimeout(function(){$('vSave').textContent='💾 Save: show them at the top of the activity'},1600)},$('vSave'))};
+ })}
+
+// ---------- results ----------
 ['fAct','fWhen','fName'].forEach(function(id){$(id).addEventListener('input',render)});
 document.querySelectorAll('.tab').forEach(function(t){t.onclick=function(){VIEW=t.dataset.v;document.querySelectorAll('.tab').forEach(function(x){x.classList.toggle('on',x===t)});render()}});
-
 function pctPill(p){if(p===''||p==null)return '';var c=p>=80?'p-good':p>=50?'p-mid':'p-bad';return '<span class="pill '+c+'">'+p+'%</span>'}
 function fmt(t){var d=new Date(t);return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short'})+' · '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}
 function filtered(){var a=$('fAct').value,w=+$('fWhen').value,n=$('fName').value.trim().toLowerCase(),now=new Date(),from=0;
  if(w===1){from=new Date(now.getFullYear(),now.getMonth(),now.getDate()).getTime()}else if(w>1){from=now.getTime()-w*864e5}
  return ROWS.filter(function(r){return(!a||r.id===a)&&(!from||r.t>=from)&&(!n||String(r.name).toLowerCase().indexOf(n)>-1)})}
-
 function stats(){var today=new Date();today.setHours(0,0,0,0);var t=ROWS.filter(function(r){return r.t>=today.getTime()});
  var names={};ROWS.forEach(function(r){if(r.name)names[String(r.name).toLowerCase()]=1});
  var ps=ROWS.filter(function(r){return r.pct!==''}).map(function(r){return +r.pct});var avg=ps.length?Math.round(ps.reduce(function(a,b){return a+b},0)/ps.length):'–';
  var S=[['--blue','--blue-s',ROWS.length,'attempts in total'],['--pink','--pink-s',t.length,'attempts today'],['--teal','--teal-s',Object.keys(names).length,'students (by name)'],['--violet','--violet-s',avg+(ps.length?'%':''),'average score']];
  $('stats').innerHTML=S.map(function(s){return '<div class="stat" style="--c:var('+s[0]+');--s:var('+s[1]+')"><b>'+s[2]+'</b><span>'+s[3]+'</span></div>'}).join('')}
-
 function render(){var R=filtered().slice().sort(function(a,b){return b.t-a.t});$('count').textContent=R.length+' result'+(R.length===1?'':'s');
  if(!R.length){$('table').innerHTML='<div class="load">No results yet for this selection.</div>';return}
  if(VIEW==='stu'){var g={};R.forEach(function(r){var k=r.name?String(r.name).trim().toLowerCase():'(no name)';(g[k]=g[k]||{name:r.name||'',list:[]}).list.push(r)});
@@ -137,13 +334,13 @@ function render(){var R=filtered().slice().sort(function(a,b){return b.t-a.t});$
   var n=r.errors?String(r.errors).split('\n').length:0;
   return '<tr><td style="white-space:nowrap">'+fmt(r.t)+'</td><td>'+(r.name?'<span class="nm">'+esc(r.name)+'</span>':'<span class="anon">no name</span>')+'</td><td>'+esc(r.activity)+'</td><td>'+esc(r.level)+'</td><td style="white-space:nowrap">'+esc(r.score)+' / '+esc(r.total)+'<div class="muted" style="font-size:.78rem">✔'+esc(r.first)+' · ½'+esc(r.second)+' · ✗'+esc(r.review)+'</div></td><td>'+pctPill(r.pct)+'</td><td>'
   +(n?'<details><summary>'+n+' to review</summary><pre>'+esc(r.errors)+'</pre></details>':'<span style="color:var(--good);font-weight:700">Parfait ✓</span>')+'</td></tr>'}).join('')+'</tbody></table>'}
-
-function load(){$('refresh').textContent='⏳ Loading…';
- if(!(window.google&&google.script&&google.script.run)){$('table').innerHTML='<div class="load">Preview mode: no data.</div>';$('refresh').textContent='🔄 Refresh';return}
- google.script.run.withSuccessHandler(function(rows){ROWS=rows||[];stats();render();$('refresh').textContent='🔄 Refresh'})
+function load(){$('refresh').textContent='⏳ Loading…';var r=run();
+ if(!r){$('table').innerHTML='<div class="load">Preview mode: no data.</div>';$('refresh').textContent='🔄 Refresh';return}
+ r.withSuccessHandler(function(rows){ROWS=rows||[];stats();render();$('refresh').textContent='🔄 Refresh'})
   .withFailureHandler(function(e){$('table').innerHTML='<div class="load">Could not load results: '+esc(e&&e.message||e)+'</div>';$('refresh').textContent='🔄 Refresh'})
   .getResults(D.key)}
-$('refresh').onclick=load;load();setInterval(load,120000);
+$('refresh').onclick=function(){load();call('getActivities',[D.key],setActs)};
+renderActs();load();setInterval(load,120000);
 
 $('fbSend').onclick=function(){var t=$('fbText').value.trim();if(!t){$('fbText').focus();return}
  var title=t.split('\n')[0].slice(0,70);

@@ -94,7 +94,43 @@
     try { report = wrapped; } catch (e) {}
   }
 
+  // ---- 🎬 Videos made with NotebookLM, shown at the top of the activity ----
+  function embedUrl(u) {
+    var m;
+    if ((m = u.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/|live\/)|youtu\.be\/)([\w-]{6,})/))) return 'https://www.youtube.com/embed/' + m[1] + '?rel=0';
+    if ((m = u.match(/drive\.google\.com\/(?:file\/d\/|open\?id=)([\w-]{10,})/))) return 'https://drive.google.com/file/d/' + m[1] + '/preview';
+    return '';
+  }
+  function videoBox(url, label, vertical) {
+    var e = embedUrl(url), safe = url.replace(/"/g, '&quot;');
+    return '<div style="flex:' + (vertical ? '0 1 260px' : '1 1 420px') + ';min-width:0;display:flex;flex-direction:column;gap:6px">' +
+      '<b style="font-family:\'Bricolage Grotesque\',system-ui,sans-serif;color:' + (vertical ? '#db2777' : '#2563eb') + '">' + label + '</b>' +
+      (e ? '<div style="position:relative;width:100%;' + (vertical ? 'aspect-ratio:9/16;max-height:460px' : 'aspect-ratio:16/9') + ';border-radius:14px;overflow:hidden;background:#000">' +
+           '<iframe src="' + e + '" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe></div>' : '') +
+      '<a href="' + safe + '" target="_blank" rel="noopener" style="font-weight:700;color:#7c3aed">▶ Open in a new tab</a></div>';
+  }
+  function videos() {
+    var v = (ACT.video || '').trim(), s = (ACT.short || '').trim();
+    if ((!v && !s) || document.getElementById('rru-videos')) return;
+    var box = document.createElement('section');
+    box.id = 'rru-videos';
+    box.style.cssText = 'max-width:920px;margin:18px auto 0;padding:16px 18px;border-radius:22px;border:3px dashed #e9a8cf;' +
+      'background:linear-gradient(135deg,#fff1f8,#eef4ff);color:#2b1a14;font:16px/1.5 "Atkinson Hyperlegible",system-ui,sans-serif;box-sizing:border-box';
+    box.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">' +
+      '<h2 style="margin:0;font:800 1.4rem \'Bricolage Grotesque\',system-ui,sans-serif">🎬 Watch first · Regardez d\'abord</h2>' +
+      '<button type="button" id="rru-vtoggle" style="font:inherit;font-weight:700;border:2px solid #e9a8cf;background:#fff;border-radius:999px;padding:4px 12px;cursor:pointer">Hide videos</button></div>' +
+      '<div id="rru-vbody" style="display:flex;flex-wrap:wrap;gap:16px;margin-top:10px;align-items:flex-start">' +
+      (v ? videoBox(v, '📺 The explanation', false) : '') + (s ? videoBox(s, '⚡ In 60 seconds', true) : '') + '</div>';
+    var wrap = document.querySelector('.wrap');
+    if (wrap && wrap.parentNode) wrap.parentNode.insertBefore(box, wrap); else document.body.insertBefore(box, document.body.firstChild);
+    document.getElementById('rru-vtoggle').onclick = function () {
+      var b = document.getElementById('rru-vbody'), hid = b.style.display === 'none';
+      b.style.display = hid ? 'flex' : 'none'; this.textContent = hid ? 'Hide videos' : 'Show videos';
+    };
+  }
+
   hook();
+  videos();
   setTimeout(hook, 0);
   window.addEventListener('load', function () {
     hook();
