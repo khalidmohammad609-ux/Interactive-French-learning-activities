@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Master page · results</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+:root{--bg:#fff8f1;--surface:#fff;--fg:#2b1a14;--muted:#7a5b4e;--line:#f1dfd2;--accent:#c2410c;--accent-soft:#ffe3d3;
+ --blue:#2563eb;--blue-s:#dde8ff;--pink:#db2777;--pink-s:#ffe1ef;--teal:#0d9488;--teal-s:#d4f4ee;--violet:#7c3aed;--violet-s:#ece3ff;
+ --good:#16a34a;--good-s:#dcfce7;--warn:#b45309;--warn-s:#fef3c7;--bad:#dc2626;--bad-s:#fee2e2}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 "Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif}
+.wrap{max-width:1150px;margin:0 auto;padding:24px 16px 60px;display:flex;flex-direction:column;gap:22px}
+h1,h2{font-family:"Bricolage Grotesque",system-ui,sans-serif;margin:0;line-height:1.1}
+h1{font-size:clamp(1.8rem,5vw,2.7rem)}
+h1 span{display:inline-block;padding:0 .18em;border-radius:.2em;background:var(--blue-s);color:var(--blue);transform:rotate(-1.5deg)}
+h2{font-size:1.35rem}
+.eyebrow{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--accent)}
+.bar{display:flex;flex-wrap:wrap;gap:10px}
+.btn{font:inherit;font-weight:700;padding:9px 16px;border-radius:999px;border:2px solid var(--c,var(--accent));background:var(--s,var(--accent-soft));color:var(--c,var(--accent));cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn.solid{background:var(--c,var(--accent));color:#fff}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.stat{background:var(--s);border-radius:16px;padding:12px 16px;border-left:6px solid var(--c)}
+.stat b{display:block;font:800 2rem "Bricolage Grotesque",system-ui,sans-serif;color:var(--c);font-variant-numeric:tabular-nums}
+.stat span{font-size:.88rem}
+.panel{background:var(--surface);border:2px solid var(--line);border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.acts{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:10px}
+.act{background:var(--s);border-radius:14px;padding:10px 12px;display:flex;flex-direction:column;gap:6px}
+.act b{color:var(--c)}
+.act .row{display:flex;gap:6px}
+.act input{flex:1;min-width:0;font:inherit;font-size:.8rem;padding:6px 8px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--muted)}
+.act button,.act a{font:inherit;font-size:.82rem;font-weight:700;border:none;border-radius:8px;padding:6px 10px;background:var(--c);color:#fff;cursor:pointer;text-decoration:none}
+.filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.filters select,.filters input{font:inherit;padding:7px 10px;border-radius:10px;border:2px solid var(--line);background:#fff;color:var(--fg)}
+.tabs{display:flex;gap:6px}
+.tab{font:inherit;font-weight:700;border:2px solid var(--line);background:#fff;border-radius:999px;padding:6px 14px;cursor:pointer}
+.tab.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.tscroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.92rem;min-width:720px}
+th{text-align:left;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:8px;border-bottom:2px solid var(--line);position:sticky;top:0;background:#fff}
+td{padding:8px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:hover td{background:#fffaf5}
+.pill{display:inline-block;min-width:52px;text-align:center;font-weight:800;border-radius:999px;padding:2px 10px;font-variant-numeric:tabular-nums}
+.p-good{background:var(--good-s);color:var(--good)}.p-mid{background:var(--warn-s);color:var(--warn)}.p-bad{background:var(--bad-s);color:var(--bad)}
+.nm{font-weight:700;color:var(--blue)}.anon{color:var(--muted);font-style:italic}
+details summary{cursor:pointer;color:var(--pink);font-weight:700}
+details pre{white-space:pre-wrap;font:inherit;font-size:.85rem;margin:6px 0 0;background:var(--pink-s);border-radius:10px;padding:8px 10px}
+.muted{color:var(--muted)}
+.fb{background:linear-gradient(135deg,#fff1f8,#eef4ff);border:3px dashed #e9a8cf}
+.fb textarea{font:inherit;width:100%;min-height:90px;border-radius:12px;border:2px solid #e9a8cf;padding:10px;resize:vertical}
+.load{padding:20px;text-align:center;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Teacher only · keep this link private</div>
+    <h1>📋 Master page · <span>results</span></h1>
+  </header>
+
+  <div class="bar">
+    <button class="btn solid" id="refresh">🔄 Refresh</button>
+    <a class="btn" style="--c:var(--good);--s:var(--good-s)" id="sheet" target="_blank">📊 Open the Sheet</a>
+    <a class="btn" style="--c:var(--blue);--s:var(--blue-s)" id="home" target="_blank">🎒 Student page</a>
+    <a class="btn" style="--c:var(--pink);--s:var(--pink-s)" href="#feedback">💬 Feedback / request an update</a>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <section class="panel">
+    <h2>🔗 My activities</h2>
+    <div class="acts" id="acts"></div>
+  </section>
+
+  <section class="panel">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+      <h2>📈 Results</h2>
+      <div class="tabs"><button class="tab on" data-v="all">Every attempt</button><button class="tab" data-v="stu">By student</button></div>
+    </div>
+    <div class="filters">
+      <select id="fAct"><option value="">All activities</option></select>
+      <select id="fWhen"><option value="0">Any date</option><option value="1">Today</option><option value="7">Last 7 days</option><option value="30">Last 30 days</option></select>
+      <input id="fName" placeholder="🔎 Name…">
+      <span class="muted" id="count"></span>
+    </div>
+    <div class="tscroll" id="table"><div class="load">Loading results…</div></div>
+  </section>
+
+  <section class="panel fb" id="feedback">
+    <h2>💬 Feedback for Claude</h2>
+    <p class="muted">Write what you want changed (in the app, an activity, this page…). It opens a GitHub issue; press <b>Submit new issue</b> there. Then tell Claude « check my app feedback ».</p>
+    <textarea id="fbText" placeholder="Example: In the results table, also show which level each student finished first…"></textarea>
+    <div class="bar"><button class="btn solid" style="--c:var(--pink)" id="fbSend">📨 Send to GitHub</button><a class="btn" id="fbList" target="_blank">📚 See all my feedback</a></div>
+  </section>
+</div>
+<script>
+/*__DATA__*/
+var D=window.DATA||{activities:[]},ROWS=[],VIEW='all';
+var COL=[['--blue','--blue-s'],['--pink','--pink-s'],['--teal','--teal-s'],['--violet','--violet-s']];
+var $=function(id){return document.getElementById(id)};
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+$('sheet').href=D.sheet;$('home').href=D.url;$('fbList').href=D.repo+'/issues';
+
+$('acts').innerHTML=D.activities.map(function(a,i){var c=COL[i%4],link=D.url+'?a='+encodeURIComponent(a.id);
+ return '<div class="act" style="--c:var('+c[0]+');--s:var('+c[1]+')"><b>'+(a.emoji||'📘')+' '+esc(a.title)+'</b>'
+ +'<span class="muted" style="font-size:.85rem">'+esc(a.topic||'')+(a.for?' · '+esc(a.for):'')+(a.hidden?' · 🙈 hidden from student page':'')+'</span>'
+ +'<div class="row"><input readonly value="'+esc(link)+'"><button data-copy="'+esc(link)+'">Copy</button><a href="'+esc(link)+'" target="_blank">Open</a></div></div>'}).join('');
+document.addEventListener('click',function(e){var b=e.target.closest('[data-copy]');if(!b)return;var inp=b.parentNode.querySelector('input');
+ function done(){b.textContent='✓ Copied';setTimeout(function(){b.textContent='Copy'},1500)}
+ if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(b.dataset.copy).then(done,function(){inp.select();document.execCommand('copy');done()})}else{inp.select();document.execCommand('copy');done()}});
+
+D.activities.forEach(function(a){var o=document.createElement('option');o.value=a.id;o.textContent=a.title;$('fAct').appendChild(o)});
+['fAct','fWhen','fName'].forEach(function(id){$(id).addEventListener('input',render)});
+document.querySelectorAll('.tab').forEach(function(t){t.onclick=function(){VIEW=t.dataset.v;document.querySelectorAll('.tab').forEach(function(x){x.classList.toggle('on',x===t)});render()}});
+
+function pctPill(p){if(p===''||p==null)return '';var c=p>=80?'p-good':p>=50?'p-mid':'p-bad';return '<span class="pill '+c+'">'+p+'%</span>'}
+function fmt(t){var d=new Date(t);return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short'})+' · '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}
+function filtered(){var a=$('fAct').value,w=+$('fWhen').value,n=$('fName').value.trim().toLowerCase(),now=new Date(),from=0;
+ if(w===1){from=new Date(now.getFullYear(),now.getMonth(),now.getDate()).getTime()}else if(w>1){from=now.getTime()-w*864e5}
+ return ROWS.filter(function(r){return(!a||r.id===a)&&(!from||r.t>=from)&&(!n||String(r.name).toLowerCase().indexOf(n)>-1)})}
+
+function stats(){var today=new Date();today.setHours(0,0,0,0);var t=ROWS.filter(function(r){return r.t>=today.getTime()});
+ var names={};ROWS.forEach(function(r){if(r.name)names[String(r.name).toLowerCase()]=1});
+ var ps=ROWS.filter(function(r){return r.pct!==''}).map(function(r){return +r.pct});var avg=ps.length?Math.round(ps.reduce(function(a,b){return a+b},0)/ps.length):'–';
+ var S=[['--blue','--blue-s',ROWS.length,'attempts in total'],['--pink','--pink-s',t.length,'attempts today'],['--teal','--teal-s',Object.keys(names).length,'students (by name)'],['--violet','--violet-s',avg+(ps.length?'%':''),'average score']];
+ $('stats').innerHTML=S.map(function(s){return '<div class="stat" style="--c:var('+s[0]+');--s:var('+s[1]+')"><b>'+s[2]+'</b><span>'+s[3]+'</span></div>'}).join('')}
+
+function render(){var R=filtered().slice().sort(function(a,b){return b.t-a.t});$('count').textContent=R.length+' result'+(R.length===1?'':'s');
+ if(!R.length){$('table').innerHTML='<div class="load">No results yet for this selection.</div>';return}
+ if(VIEW==='stu'){var g={};R.forEach(function(r){var k=r.name?String(r.name).trim().toLowerCase():'(no name)';(g[k]=g[k]||{name:r.name||'',list:[]}).list.push(r)});
+  var rows=Object.keys(g).map(function(k){var x=g[k],ps=x.list.map(function(r){return +r.pct||0}),acts={};x.list.forEach(function(r){acts[r.activity]=1});
+   return {name:x.name,n:x.list.length,best:Math.max.apply(null,ps),avg:Math.round(ps.reduce(function(a,b){return a+b},0)/ps.length),last:x.list[0].t,acts:Object.keys(acts)}}).sort(function(a,b){return String(a.name).localeCompare(String(b.name))});
+  $('table').innerHTML='<table><thead><tr><th>Student</th><th>Attempts</th><th>Average</th><th>Best</th><th>Last seen</th><th>Activities</th></tr></thead><tbody>'+rows.map(function(s){
+   return '<tr><td>'+(s.name?'<span class="nm">'+esc(s.name)+'</span>':'<span class="anon">no name</span>')+'</td><td>'+s.n+'</td><td>'+pctPill(s.avg)+'</td><td>'+pctPill(s.best)+'</td><td>'+fmt(s.last)+'</td><td>'+esc(s.acts.join(' · '))+'</td></tr>'}).join('')+'</tbody></table>';return}
+ $('table').innerHTML='<table><thead><tr><th>When</th><th>Name</th><th>Activity</th><th>Level</th><th>Score</th><th>%</th><th>Errors</th></tr></thead><tbody>'+R.map(function(r){
+  var n=r.errors?String(r.errors).split('\n').length:0;
+  return '<tr><td style="white-space:nowrap">'+fmt(r.t)+'</td><td>'+(r.name?'<span class="nm">'+esc(r.name)+'</span>':'<span class="anon">no name</span>')+'</td><td>'+esc(r.activity)+'</td><td>'+esc(r.level)+'</td><td style="white-space:nowrap">'+esc(r.score)+' / '+esc(r.total)+'<div class="muted" style="font-size:.78rem">✔'+esc(r.first)+' · ½'+esc(r.second)+' · ✗'+esc(r.review)+'</div></td><td>'+pctPill(r.pct)+'</td><td>'
+  +(n?'<details><summary>'+n+' to review</summary><pre>'+esc(r.errors)+'</pre></details>':'<span style="color:var(--good);font-weight:700">Parfait ✓</span>')+'</td></tr>'}).join('')+'</tbody></table>'}
+
+function load(){$('refresh').textContent='⏳ Loading…';
+ if(!(window.google&&google.script&&google.script.run)){$('table').innerHTML='<div class="load">Preview mode: no data.</div>';$('refresh').textContent='🔄 Refresh';return}
+ google.script.run.withSuccessHandler(function(rows){ROWS=rows||[];stats();render();$('refresh').textContent='🔄 Refresh'})
+  .withFailureHandler(function(e){$('table').innerHTML='<div class="load">Could not load results: '+esc(e&&e.message||e)+'</div>';$('refresh').textContent='🔄 Refresh'})
+  .getResults(D.key)}
+$('refresh').onclick=load;load();setInterval(load,120000);
+
+$('fbSend').onclick=function(){var t=$('fbText').value.trim();if(!t){$('fbText').focus();return}
+ var title=t.split('\n')[0].slice(0,70);
+ window.open(D.repo+'/issues/new?labels=feedback&title='+encodeURIComponent('Feedback: '+title)+'&body='+encodeURIComponent(t+'\n\n— sent from the master page, '+new Date().toLocaleString('en-GB')),'_blank')};
+</script>
+</body>
+</html>

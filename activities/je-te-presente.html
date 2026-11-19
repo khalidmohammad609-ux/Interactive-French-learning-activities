@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Je te présente…</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Layout: bistro-menu theme — each article family has its own colour (masc / fem / vowel / plural / de / definite), reused in rule table, chips, feedback and report */
+:root{
+  --bg:#fff8f1; --surface:#ffffff; --fg:#2b1a14; --muted:#7a5b4e; --line:#f1dfd2;
+  --m:#2563eb; --m-soft:#dde8ff;     /* du */
+  --f:#db2777; --f-soft:#ffe1ef;     /* de la */
+  --v:#0d9488; --v-soft:#d4f4ee;     /* de l' */
+  --p:#ea580c; --p-soft:#ffe6d4;     /* des */
+  --d:#7c3aed; --d-soft:#ece3ff;     /* de / d' */
+  --t:#ca8a04; --t-soft:#fdf3c9;     /* le la l' les */
+  --q:#0284c7; --q-soft:#dbf0fc;     /* quantité précise */
+  --accent:#c2410c; --accent-soft:#ffe3d3;
+  --good:#16a34a; --good-soft:#dcfce7; --warn:#b45309; --warn-soft:#fef3c7; --bad:#dc2626; --bad-soft:#fee2e2;
+  --display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+  --body:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#1c1310; --surface:#2a1d18; --fg:#fbefe8; --muted:#d0b3a6; --line:#47322a;
+  --m:#82a9ff; --m-soft:#1f2c55; --f:#ff7fb6; --f-soft:#4a1c33; --v:#41d6c3; --v-soft:#0f3b37; --p:#ff9d5e; --p-soft:#4a2714;
+  --d:#b99aff; --d-soft:#34265c; --t:#f5c84a; --t-soft:#3f3210; --q:#5cc4f5; --q-soft:#0f3347;
+  --accent:#ff9b6b; --accent-soft:#4a2617;
+  --good:#4ade80; --good-soft:#133a24; --warn:#fbbf24; --warn-soft:#3d2f0f; --bad:#f87171; --bad-soft:#4a1818; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1c1310; --surface:#2a1d18; --fg:#fbefe8; --muted:#d0b3a6; --line:#47322a;
+  --m:#82a9ff; --m-soft:#1f2c55; --f:#ff7fb6; --f-soft:#4a1c33; --v:#41d6c3; --v-soft:#0f3b37; --p:#ff9d5e; --p-soft:#4a2714;
+  --d:#b99aff; --d-soft:#34265c; --t:#f5c84a; --t-soft:#3f3210; --q:#5cc4f5; --q-soft:#0f3347;
+  --accent:#ff9b6b; --accent-soft:#4a2617;
+  --good:#4ade80; --good-soft:#133a24; --warn:#fbbf24; --warn-soft:#3d2f0f; --bad:#f87171; --bad-soft:#4a1818; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:17px;line-height:1.55}
+.wrap{max-width:920px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 60px;display:flex;flex-direction:column;gap:34px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.1}
+p{margin:0}
+.k-m{--c:var(--m);--s:var(--m-soft)} .k-f{--c:var(--f);--s:var(--f-soft)} .k-v{--c:var(--v);--s:var(--v-soft)}
+.k-p{--c:var(--p);--s:var(--p-soft)} .k-d{--c:var(--d);--s:var(--d-soft)} .k-t{--c:var(--t);--s:var(--t-soft)} .k-q{--c:var(--q);--s:var(--q-soft)}
+
+.hero{display:flex;flex-direction:column;gap:14px}
+.eyebrow{font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--accent)}
+.hero h1{font-size:clamp(2.2rem,7vw,3.9rem);font-weight:800;letter-spacing:-.02em}
+.hero h1 span{display:inline-block;padding:0 .16em;border-radius:.2em}
+.hero h1 .a{background:var(--m-soft);color:var(--m);transform:rotate(-2deg)}
+.hero h1 .b{background:var(--f-soft);color:var(--f);transform:rotate(1.5deg)}
+.hero h1 .c{background:var(--p-soft);color:var(--p);transform:rotate(-1deg)}
+.hero p{max-width:64ch;color:var(--muted)}
+.formula{display:flex;flex-wrap:wrap;align-items:center;gap:10px;font-family:var(--display);font-weight:700;font-size:1.1rem}
+.chip{padding:7px 14px;border-radius:999px;background:var(--s,var(--accent-soft));color:var(--c,var(--accent))}
+.op{color:var(--muted)}
+
+.learn{display:flex;flex-direction:column;gap:22px}
+.learn h2{font-size:1.75rem}
+.table-scroll{overflow-x:auto}
+table{border-collapse:separate;border-spacing:0 8px;width:100%;min-width:540px}
+th{font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);text-align:left;padding:0 14px}
+td{padding:11px 14px;background:var(--s)}
+td:first-child{border-radius:12px 0 0 12px;font-weight:700;color:var(--c);white-space:nowrap}
+td:last-child{border-radius:0 12px 12px 0}
+td b{color:var(--c)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.card{background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.card h3{font-size:1.12rem}
+.card .ex{font-style:italic;color:var(--muted)}
+.card.attn{border-color:var(--warn);background:var(--warn-soft)}
+.card.attn h3{color:var(--warn)}
+.qgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.qcol{background:var(--s);border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.qcol h3{color:var(--c);font-size:1.15rem}
+.qcol ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.qcol b{color:var(--c)}
+.qwords{display:flex;flex-wrap:wrap;gap:8px}
+.qwords span{padding:6px 12px;border-radius:999px;background:var(--s);color:var(--c);font-weight:700;font-family:var(--display)}
+
+.quiz{background:var(--surface);border-radius:24px;padding:22px;border:3px solid var(--accent-soft);display:flex;flex-direction:column;gap:18px}
+.quiz-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.quiz-head h2{font-size:1.75rem}
+.counter{font-family:var(--display);font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums}
+.dots{display:flex;flex-wrap:wrap;gap:6px}
+.dot{width:22px;height:22px;border-radius:50%;background:var(--line);font-size:.7rem;display:grid;place-items:center;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
+.dot.cur{outline:3px solid var(--accent);outline-offset:1px}
+.dot.r1{background:var(--good);color:#fff} .dot.r2{background:var(--warn);color:#fff} .dot.r0{background:var(--bad);color:#fff}
+.sentence{font-size:clamp(1.2rem,3.4vw,1.55rem);font-family:var(--display);font-weight:500;line-height:1.4;min-height:2.9em}
+.blank{display:inline-block;min-width:4.5em;border-bottom:3px dashed var(--accent);text-align:center;color:var(--accent);font-weight:800;padding:0 .2em}
+.blank.ok{border-bottom-style:solid;border-color:var(--good);color:var(--good)}
+.blank.shown{border-bottom-style:solid;border-color:var(--bad);color:var(--bad)}
+.who{font-size:.9rem;color:var(--muted)}
+.opts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media (max-width:560px){.opts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.opt{font:inherit;font-family:var(--display);font-weight:700;font-size:1.08rem;padding:12px 6px;border-radius:14px;border:2px solid var(--c);background:var(--s);color:var(--c);cursor:pointer;transition:transform .12s}
+.opt:hover:not(:disabled){transform:translateY(-2px)}
+.opt:focus-visible,.btn:focus-visible{outline:3px solid var(--fg);outline-offset:2px}
+.opt:disabled{cursor:default;opacity:.35}
+.opt.wrong{opacity:.35;text-decoration:line-through}
+.opt.right{opacity:1;background:var(--good);border-color:var(--good);color:#fff}
+.feedback{border-radius:14px;padding:12px 16px;font-weight:700;display:flex;flex-direction:column;gap:6px}
+.feedback.ok{background:var(--good-soft);color:var(--good)}
+.feedback.hint{background:var(--warn-soft);color:var(--fg);border:2px solid var(--warn)}
+.feedback.no{background:var(--bad-soft);color:var(--bad)}
+.feedback small{font-weight:400;color:var(--fg)}
+.actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}
+.btn{font:inherit;font-weight:700;font-family:var(--display);padding:11px 22px;border-radius:999px;border:none;background:var(--accent);color:var(--surface);cursor:pointer;font-size:1rem}
+.btn.ghost{background:transparent;color:var(--accent);border:2px solid var(--accent)}
+.report{display:flex;flex-direction:column;gap:18px}
+.score{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.big{font-family:var(--display);font-weight:800;font-size:4rem;line-height:1;color:var(--accent);font-variant-numeric:tabular-nums}
+.big small{font-size:1.4rem;color:var(--muted)}
+.verdict{font-size:1.12rem;font-weight:700}
+.tally{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.t{border-radius:14px;padding:12px 14px;background:var(--s);display:flex;flex-direction:column;gap:2px}
+.t b{font-family:var(--display);font-size:1.6rem;font-variant-numeric:tabular-nums;color:var(--c)}
+.t span{font-size:.85rem}
+.mist{display:flex;flex-direction:column;gap:10px;padding:0;margin:0;list-style:none}
+.mist li{border-left:6px solid var(--c);background:var(--s);border-radius:0 12px 12px 0;padding:10px 14px;display:flex;flex-direction:column;gap:4px}
+.mist .q{font-weight:700}
+.mist .meta{font-size:.92rem;color:var(--muted)}
+.mist .meta s{color:var(--bad)} .mist .meta strong{color:var(--good)}
+.advice{background:var(--accent-soft);border-radius:14px;padding:14px 16px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+.steps{display:flex;flex-direction:column;gap:12px}
+.step{display:grid;grid-template-columns:44px 1fr;gap:14px;align-items:start;background:var(--s);border-left:6px solid var(--c);border-radius:0 16px 16px 0;padding:14px 16px}
+.step h3{font-size:1.15rem;color:var(--c);margin-bottom:4px}
+.step p{margin-top:4px}
+.num{width:40px;height:40px;border-radius:50%;background:var(--c);color:#fff;display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:1.2rem}
+.step.goal{border:3px solid var(--c);border-left-width:6px;box-shadow:0 6px 0 var(--s)}
+.ex{font-family:var(--display);font-size:1.05rem}
+b.s{color:var(--m)} b.v{color:var(--v)} b.o{color:var(--f)}
+.note{background:var(--accent-soft);border-radius:12px;padding:10px 14px;font-weight:600}
+.task{font-size:clamp(1.1rem,3vw,1.35rem);font-family:var(--display);line-height:1.4}
+.task b{color:var(--accent)}
+.opts{grid-template-columns:1fr!important}
+.opt{text-align:left;padding:12px 16px;font-size:1.02rem}
+.wform{display:flex;gap:10px;flex-wrap:wrap}
+#win{flex:1 1 260px;min-width:0;font:inherit;font-family:var(--display);font-size:1.1rem;padding:12px 14px;border-radius:14px;border:2px solid var(--v);background:var(--v-soft);color:var(--fg)}
+#win:focus{outline:3px solid var(--accent);outline-offset:1px}
+#win:disabled{opacity:.6}
+.kbd{display:flex;gap:8px;flex-wrap:wrap}
+.key{font:inherit;font-family:var(--display);font-weight:700;font-size:1.1rem;width:44px;height:40px;border-radius:10px;border:2px solid var(--p);background:var(--p-soft);color:var(--p);cursor:pointer}
+.key:disabled{opacity:.4;cursor:default}
+.navrow{justify-content:space-between}
+.btn:disabled{opacity:.4;cursor:default}
+button.dot{border:none;font-family:inherit;cursor:pointer;padding:0}
+button.dot:disabled{cursor:default;opacity:.55}
+.dot.w:not(.r1):not(.r2):not(.r0){background:var(--p-soft);color:var(--p)}
+.sep{font-size:.9rem;margin:0 4px;align-self:center}
+.k-good{--c:var(--good);--s:var(--good-soft)} .k-mid{--c:var(--warn);--s:var(--warn-soft)}
+.feedback small{display:block;margin-top:6px}
+.report h3{font-size:1.3rem}
+.why{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.wcard{background:var(--s);border-top:6px solid var(--c);border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.wcard h3{font-size:1.05rem;color:var(--c)}
+.ps{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;border:2px dashed var(--accent);background:var(--accent-soft);border-radius:16px;padding:16px}
+.ps h3{font-size:1.1rem;color:var(--accent);margin-bottom:6px}
+.ps p{margin-top:6px}
+.ps-tag{font-family:var(--display);font-weight:800;font-size:1.3rem;color:var(--surface);background:var(--accent);border-radius:12px;padding:6px 10px;transform:rotate(-4deg)}
+
+.task .who{color:var(--muted);font-weight:600}
+.wform .pre{align-self:center;font-family:var(--display);font-weight:700;font-size:1.05rem;color:var(--m);flex:0 0 auto}
+.hero h1{font-size:clamp(1.9rem,6vw,3.3rem)}
+
+.opts{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+.opt{text-align:center}
+.sentence .inf{font-size:.8em;color:var(--muted);font-style:italic}
+.name-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--m-soft);border-radius:14px;padding:10px 14px}
+.name-row label{font-family:var(--display);font-weight:700;color:var(--m)}
+#sname{flex:1 1 200px;min-width:0;font:inherit;padding:9px 12px;border-radius:10px;border:2px solid var(--m);background:var(--surface);color:var(--fg)}
+.rname{font-family:var(--display);font-weight:700;font-size:1.2rem;color:var(--m)}
+.step s{color:var(--bad)}
+.table-scroll table{min-width:0;font-size:.92rem}
+.table-scroll th,.table-scroll td{padding:8px 7px}
+@media (max-width:480px){.table-scroll table{font-size:.7rem}.table-scroll th{letter-spacing:0;font-size:.6rem}.table-scroll th,.table-scroll td{padding:7px 3px}.table-scroll td:first-child{padding-left:6px}}
+
+.timeline{display:flex;flex-direction:column;gap:10px;background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:16px}
+.tl-row{display:grid;grid-template-columns:120px 1fr;gap:10px;align-items:center}
+.tl-lab{font-family:var(--display);font-weight:800;color:var(--c);background:var(--s);border-radius:999px;padding:5px 10px;text-align:center;font-size:.9rem}
+.tl-bar{border-bottom:3px solid var(--line);padding-bottom:6px;font-family:var(--display);}
+.wave{color:var(--m);font-weight:700;text-decoration:underline wavy var(--m);text-underline-offset:6px}
+.pt{color:var(--f);font-weight:800;margin-left:45%}
+@media (max-width:480px){.tl-row{grid-template-columns:1fr}.pt{margin-left:30%}}
+
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.rcard{background:var(--s);border-top:6px solid var(--c);border-radius:16px;padding:14px 16px}
+.rcard h3{color:var(--c);font-size:1.15rem;margin:0 0 6px}
+.rcard p{margin:4px 0;font-size:.95rem;line-height:1.5}
+.pair{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-family:var(--display);font-size:1.05rem;margin:4px 0}
+.pair b{color:var(--c)}
+.say{font:inherit;font-size:.85rem;border:2px solid var(--c);background:#fff;color:var(--c);border-radius:999px;padding:2px 10px;cursor:pointer}
+.say:hover{background:var(--c);color:#fff}
+.dev{color:var(--muted);font-size:.9rem}
+.fam{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.fam span{background:var(--surface);border:2px solid var(--line);border-radius:12px;padding:6px 10px;font-size:.92rem}
+.fam span b{color:var(--accent)}
+.listen{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:6px 0 12px}
+.listen button{font:inherit;font-weight:700;font-size:1.05rem;border:3px solid var(--v);background:var(--v-soft);color:var(--fg);border-radius:14px;padding:10px 16px;cursor:pointer}
+.badge{margin:4px auto 14px;max-width:300px;border:4px double var(--fg);border-radius:6px;background:#fff;color:#1d1d2b;text-align:center;padding:14px 10px;font-family:var(--display);box-shadow:0 6px 0 var(--accent-soft);transform:rotate(-1.5deg)}
+.badge .nm{font-weight:800;font-size:1.15rem}.badge .rl{margin-top:4px}.badge .ct{margin-top:4px;font-weight:700;color:#7a2fd0}
+.lvls{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.lvl{font:inherit;text-align:left;cursor:pointer;background:var(--surface);border:3px solid var(--line);border-radius:16px;padding:12px 14px;display:flex;flex-direction:column;gap:4px}
+.lvl:hover{border-color:var(--accent);transform:translateY(-2px)}
+.lvl b{font-family:var(--display);font-size:1.05rem}.lvl span{font-size:.92rem;color:var(--muted)}.lvl em{font-style:normal;font-size:.8rem;font-weight:700;color:var(--accent)}
+.lvl.all{background:var(--accent-soft);border-color:var(--accent)}
+.lvltabs{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 12px;position:sticky;top:0;z-index:5;background:var(--surface);padding:6px 0}
+.lt{font:inherit;font-size:.85rem;font-weight:700;border:2px solid var(--line);background:var(--surface);color:var(--fg);border-radius:999px;padding:6px 12px;cursor:pointer}
+.lt.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.tip{background:var(--warn-soft);border-left:6px solid var(--warn);border-radius:12px;padding:10px 14px;margin-top:12px;font-size:.95rem}
+
+.stm{color:#2563eb;font-weight:800}
+.end{color:#db2777;font-weight:800;background:#fce7f3;border-radius:4px;padding:0 2px}
+.aux{color:#059669;font-weight:800;background:#d1fae5;border-radius:4px;padding:0 3px}
+.learn b,.feedback small b,.mist b{color:#db2777;font-weight:800;background:#fce7f3;border-radius:4px;padding:0 2px}
+.legend{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:.9rem;margin:6px 0}
+.legend>span{padding:2px 8px;border-radius:999px;background:var(--surface);border:2px solid var(--line)}
+
+.wbox{display:flex;flex-direction:column;gap:8px;background:var(--accent-soft);border-radius:16px;padding:12px 14px}
+.wbox label{font-weight:700;font-size:.92rem}
+.wrow{display:flex;gap:8px;flex-wrap:wrap}
+.wrow input{flex:1 1 200px;min-width:0;font:inherit;font-size:1.15rem;padding:10px 12px;border-radius:12px;border:3px solid var(--accent);background:var(--surface);color:var(--fg)}
+.wrow input:disabled{border-color:var(--good);color:var(--good);font-weight:700}
+.wkeys{display:flex;flex-wrap:wrap;gap:6px}
+.wk{font:inherit;font-weight:700;min-width:36px;padding:4px 8px;border-radius:10px;border:2px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+
+.gen-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:-6px}
+.gen-row span{font-weight:700}
+.gen{font:inherit;font-weight:700;border:3px solid var(--line);background:var(--surface);color:var(--fg);border-radius:999px;padding:6px 14px;cursor:pointer}
+.gen.on{border-color:var(--accent);background:var(--accent-soft)}
+.vlist{font-size:.8rem;color:var(--muted);margin:-4px 0 0}
+.need{background:var(--warn-soft);border:2px solid var(--warn);border-radius:14px;padding:12px 14px;font-weight:700}
+
+.chat{display:flex;flex-direction:column;gap:8px;background:var(--surface);border:2px solid var(--line);border-radius:18px;padding:12px;margin-bottom:10px}
+.scene{display:flex;flex-wrap:wrap;gap:6px;align-items:baseline;font-size:1.05rem}.scene span{color:var(--muted);font-size:.85rem}
+.bb{display:flex;gap:8px;align-items:flex-end;max-width:92%}.bb .av{font-size:1.6rem;line-height:1}
+.bb small{display:block;font-size:.72rem;color:var(--muted);font-weight:700}
+.say.sm{font-size:.8rem;padding:0 6px;margin-left:4px;vertical-align:middle}
+.bb p{margin:0;padding:8px 12px;border-radius:16px;background:#e0ecff;color:#1e2a44;font-size:1rem}
+.bb.me{align-self:flex-end;flex-direction:row-reverse}.bb.me p{background:#ffe0ef;color:#4a1430}.bb.me small{text-align:right}
+.net{background:linear-gradient(135deg,#fff1f8,#eef4ff);border-radius:20px;padding:14px;border:3px dashed #e9a8cf}
+.net h2{margin:0 0 8px}.netg{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.pc{background:#fff;color:#1d1d2b;border-radius:16px;padding:12px;border:2px solid #e5e7eb;display:flex;flex-direction:column;gap:4px;transition:.3s}
+.pc.lock{filter:grayscale(1);opacity:.45}
+.pc .top{display:flex;gap:10px;align-items:center}.pc .big{font-size:2.2rem}
+.pc b{font-size:1.05rem}.pc .meta{font-size:.85rem;color:#555}
+.tag{display:inline-block;font-size:.78rem;font-weight:800;border-radius:999px;padding:3px 10px;margin:2px 4px 0 0}
+.tag.li{background:#dbeafe;color:#1d4ed8}.tag.ig{background:linear-gradient(90deg,#fde68a,#f9a8d4,#c4b5fd);color:#5b1440}
+.newfriend{animation:pop .6s}@keyframes pop{0%{transform:scale(.8)}60%{transform:scale(1.06)}100%{transform:scale(1)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="eyebrow">Objectif Diplomatie 1 · Dossier 1 · Unité 1 · Saluer, se présenter, présenter quelqu'un (p. 12–13)</div>
+    <h1>Salut ! <span class="a">Je m'appelle…</span> <span class="c">Je te présente…</span> 🤝</h1>
+    <p>You play <b>yourself</b>: write your name and choose « un étudiant / une étudiante », and the people will talk to YOU. Meet three people — a classmate, a French diplomat and a stranger — greet them, ask about them, talk about yourself, then <b>present them</b> to each other. Each person you meet joins <b>your network</b> 📸💼 at the end. Tap 🔊 to hear the lines.</p>
+    <div class="formula"><span class="chip k-m">je</span><span class="chip k-f">tu / vous</span><span class="chip k-t">il / elle</span></div>
+  </header>
+  <section class="learn"><h2>Before you start 🔎</h2>
+    <div class="legend">🎨 <span><span class="stm">stem</span></span><span><span class="end">ending</span></span><span><span class="aux">auxiliary</span></span><span><b>key grammar point</b></span></div>
+    <div class="rules">
+      <div class="rcard k-m"><h3>1 · Saluer 👋</h3>
+        <div class="pair"><span><b>Bonjour</b> !</span> <button class="say" onclick="speak('Bonjour !')">🔊</button><span class="dev">बोंजूर · in the day, until about 6 pm</span></div><div class="pair"><span><b>Bonsoir</b> !</span> <button class="say" onclick="speak('Bonsoir !')">🔊</button><span class="dev">बोंस्वार · in the evening</span></div><div class="pair"><span><b>Salut</b> !</span> <button class="say" onclick="speak('Salut !')">🔊</button><span class="dev">साल्यु · friends only: hi AND bye</span></div></div>
+      <div class="rcard k-f"><h3>2 · Tu or vous? 🎭</h3>
+        <p>Like तुम / आप: <b>tu</b> with a friend, <b>vous</b> with Madame / Monsieur (and with several people).</p>
+        <div class="pair"><span>Ça va ? — Ça va bien, <b>et toi</b> ?</span> <button class="say" onclick="speak('Ça va ? — Ça va bien, et toi ?')">🔊</button><span class="dev">friend</span></div><div class="pair"><span>Comment allez-vous ? — Je vais bien, <b>et vous</b> ?</span> <button class="say" onclick="speak('Comment allez-vous ? — Je vais bien, et vous ?')">🔊</button><span class="dev">formal</span></div>
+        <p>« <b>On se tutoie ?</b> » = « Shall we say tu? » — a stranger becomes a friend.</p></div>
+      <div class="rcard k-t"><h3>3 · Talking about yourself: je 🙋🏽‍♀️</h3>
+        <div class="pair"><span>Je m'<span class="stm">appell</span><span class="end">e</span> Kavya.</span> <button class="say" onclick="speak('Je m\'appelle Kavya.')">🔊</button><span class="dev">ज मापैल</span></div><div class="pair"><span>Je <b>suis</b> étudiant<b>e</b>.</span> <button class="say" onclick="speak('Je suis étudiante.')">🔊</button><span class="dev">+e for a woman</span></div><div class="pair"><span>Je <span class="stm">vien</span><span class="end">s</span> <b>de</b> Surat, <b>en</b> Inde.</span> <button class="say" onclick="speak('Je viens de Surat, en Inde.')">🔊</button><span class="dev">origin</span></div><div class="pair"><span>J'<span class="stm">habit</span><span class="end">e</span> à Gandhinagar. Je <span class="stm">parl</span><span class="end">e</span> hindi.</span> <button class="say" onclick="speak('J\'habite à Gandhinagar. Je parle hindi.')">🔊</button><span class="dev">j' before a vowel</span></div></div>
+      <div class="rcard k-p"><h3>4 · Presenting someone: il / elle 🤝</h3>
+        <div class="pair"><span>Rohan, je <b>te</b> présente Lucas.</span> <button class="say" onclick="speak('Rohan, je te présente Lucas.')">🔊</button><span class="dev">to a friend</span></div><div class="pair"><span>Madame, je <b>vous</b> présente Rohan.</span> <button class="say" onclick="speak('Madame, je vous présente Rohan.')">🔊</button><span class="dev">formal</span></div><div class="pair"><span><b>Il</b> est journaliste. <b>Il</b> <span class="stm">vien</span><span class="end">t</span> de Lyon.</span> <button class="say" onclick="speak('Il est journaliste. Il vient de Lyon.')">🔊</button><span class="dev">about a man</span></div><div class="pair"><span><b>Elle</b> <span class="stm">travaill</span><span class="end">e</span> au ministère.</span> <button class="say" onclick="speak('Elle travaille au ministère.')">🔊</button><span class="dev">about a woman</span></div>
+        <p>Answer: <b>Enchanté</b> (a man) / <b>Enchantée</b> (a woman) · Très heureux / heureuse.</p></div>
+      <div class="rcard k-v"><h3>5 · Prendre congé 👋</h3>
+        <div class="pair"><span><b>Au revoir</b>, Madame !</span> <button class="say" onclick="speak('Au revoir, Madame !')">🔊</button><span class="dev">re-voir = see again, like English re-view</span></div><div class="pair"><span><b>À bientôt</b> !</span> <button class="say" onclick="speak('À bientôt !')">🔊</button><span class="dev">bien + tôt = very soon</span></div><div class="pair"><span><b>Salut</b> ! · <b>À plus tard</b> !</span> <button class="say" onclick="speak('Salut ! · À plus tard !')">🔊</button><span class="dev">friends</span></div></div>
+      <div class="rcard k-m"><h3>6 · From je to tu / vous to il / elle 🔁</h3>
+        <p>je <b>suis</b> → tu <b>es</b> / vous <b>êtes</b> → il / elle <b>est</b></p>
+        <p>je <span class="stm">vien</span><span class="end">s</span> → tu <span class="stm">vien</span><span class="end">s</span> / vous <span class="stm">ven</span><span class="end">ez</span> → il <span class="stm">vien</span><span class="end">t</span></p>
+        <p>je <span class="stm">parl</span><span class="end">e</span> → tu <span class="stm">parl</span><span class="end">es</span> / vous <span class="stm">parl</span><span class="end">ez</span> → elle <span class="stm">parl</span><span class="end">e</span></p></div>
+    </div>
+    <h2 style="margin-top:18px">French in your English 🇫🇷 → 🇬🇧</h2>
+    <p>After 1066, French-speaking Normans ruled England for centuries, and thousands of French words entered English. You already know many of today's words!</p>
+    <div class="rules">
+      <div class="rcard k-t"><h3>Au revoir → review 👀</h3><p><b>re + voir</b> = see again. English <b>review</b> = « view again ». Same family: <b>vision</b>, <b>visit</b>.</p></div>
+      <div class="rcard k-v"><h3>Salut → salute 🫡</h3><p><b>Salut</b> and English <b>salute</b> both come from Latin <i>salus</i>, « good health »: a greeting was a wish for health.</p></div>
+      <div class="rcard k-m"><h3>Présenter → present 🎁</h3><p>Je te <b>présente</b> Lucas = I <b>present</b> Lucas to you. English took the word (and <b>presentation</b>) from French.</p></div>
+      <div class="rcard k-f"><h3>Enchanté → enchanted ✨</h3><p><b>Enchanté(e)</b> literally means « charmed, under a spell », like English <b>enchanted</b>: « I'm delighted to meet you ».</p></div>
+      <div class="rcard k-p"><h3>Journaliste → journal 📰</h3><p><b>jour</b> = day. A <b>journal</b> was a daily record; a <b>journaliste</b> writes the news of the day.</p></div>
+      <div class="rcard k-q"><h3>Soirée → soirée 🌙</h3><p><b>Bon<i>soir</i></b>, bonne <b>soirée</b>: <i>soir</i> = evening. English kept <b>soirée</b> for an evening party.</p></div>
+    </div>
+<section class="net" id="net"><h2>📇 Mon réseau · My network</h2><p class="meta" style="margin:0 0 8px">Finish a level and the person joins your network.</p><div class="netg" id="netg"></div></section></section>
+  <section class="quiz" aria-live="polite">
+    <div class="name-row"><label for="sname">👤 Your name</label><input id="sname" maxlength="40" autocomplete="off" placeholder="Write your first name"></div>
+    <div class="gen-row"><span>Je suis…</span><button class="gen" data-g="m">👨🏽 un étudiant</button><button class="gen" data-g="f">👩🏽 une étudiante</button><button class="gen" id="autosay" type="button">🔊 Voices: on</button></div>
+    <p class="vlist" id="vlist"></p>
+    <div class="quiz-head"><h2 id="qtitle">Choose your level</h2><div class="counter" id="counter"></div></div>
+    <div class="lvltabs" id="lvltabs"></div>
+    <div class="dots" id="dots"></div>
+    <div id="stage"></div>
+  </section>
+</div>
+<script>
+let frVoice=null;function pickVoice(){if(!('speechSynthesis' in window))return;const vs=speechSynthesis.getVoices();frVoice=vs.find(v=>v.lang&&v.lang.toLowerCase().startsWith('fr'))||null}
+if(typeof speechSynthesis!=='undefined'){pickVoice();speechSynthesis.onvoiceschanged=pickVoice}
+const FEMV=/(am[ée]lie|audrey|aur[ée]lie|marie|julie|denise|c[ée]line|l[ée]a|virginie|hortense|[ée]lo[iï]se|vivienne|brigitte|chantal|sylvie|charlotte|coralie|jacqueline|yvette|female|femme|google fran[çc]ais|google french)/i;
+const MASV=/(thomas|jacques|nicolas|paul|henri|r[ée]my|daniel|antoine|jean|alain|fabrice|j[ée]r[ôo]me|maurice|g[ée]rard|vincent|yves|guillaume|male|homme)/i;
+function frVoices(){try{return speechSynthesis.getVoices().filter(v=>v.lang&&v.lang.toLowerCase().startsWith('fr'))}catch(e){return []}}
+function voiceFor(g,me){const vs=frVoices();if(!vs.length)return null;const ff=vs.filter(v=>/fr[-_]fr/i.test(v.lang));
+ const isF=v=>FEMV.test(v.name),isM=v=>!isF(v)&&MASV.test(v.name);const test=g==='m'?isM:isF;
+ let hits=ff.filter(test);vs.filter(test).forEach(v=>{if(!hits.includes(v))hits.push(v)});
+ if(hits.length>=2)return {v:hits[me?0:1],known:true,pair:true};
+ if(hits.length===1)return {v:hits[0],known:true,pair:false};
+ const pool=ff.length?ff:vs;const other=pool.filter(v=>!(g==='m'?isF(v):isM(v)));const list=other.length?other:pool;
+ return {v:list[g==='m'?list.length-1:0],known:false,pair:false}}
+function speak(t,p,g,me){if(!('speechSynthesis' in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='fr-FR';u.rate=0.85;
+ if(g==='m'||g==='f'){const r=voiceFor(g,me);let base=1;if(r){u.voice=r.v;base=r.known?1:(g==='m'?0.75:1.3)}else base=(g==='m'?0.75:1.3);
+  if(!(r&&r.pair)&&!me){base*=(g==='m'?0.65:1.35);u.rate=1.0}u.pitch=Math.max(0.1,Math.min(2,base))}
+ else{if(frVoice)u.voice=frVoice;u.pitch=p||1}
+ speechSynthesis.speak(u)}
+const RULES = {"greet": {"k": "k-m", "name": "Greeting: bonjour / bonsoir / salut"}, "reg": {"k": "k-f", "name": "Tu or vous (et toi / et vous)"}, "moi": {"k": "k-t", "name": "Talking about yourself (je …)"}, "bye": {"k": "k-v", "name": "Taking leave: salut / au revoir / à bientôt"}, "pres": {"k": "k-p", "name": "Presenting someone: je te / je vous présente"}, "ilelle": {"k": "k-q", "name": "Talking about him / her: il, elle + verb"}};
+const ALLSECS = [{"id": "l1", "name": "🧑🏽 Niveau 1 · Rohan, a classmate", "icon": "🧑🏽", "learn": "Greet a friend, say how you are, give your name, take leave — informal: salut, et toi.", "keep": true}, {"id": "l2", "name": "👩🏼‍💼 Niveau 2 · Madame Dubois, a diplomat", "icon": "👩🏼‍💼", "learn": "The same in a formal situation: bonsoir, et vous, where you come from, au revoir.", "keep": true}, {"id": "l3", "name": "👨🏻 Niveau 3 · Lucas, a stranger", "icon": "👨🏻", "learn": "Start with vous, switch to tu (on se tutoie ?), ask where he comes from, say goodbye to a new friend.", "keep": true}, {"id": "l4", "name": "🤝 Niveau 4 · Je te présente…", "icon": "🤝", "learn": "Present your new friends to each other: je te présente / je vous présente, il / elle.", "keep": true}];
+let SECS = ALLSECS;
+const Q = [{"s": "@@N : ___", "a": "Salut !", "r": "greet", "o": {"Bonsoir !": "It's 10 h in the morning: bonsoir is for the evening (after about 6 pm).", "Au revoir !": "Au revoir is for leaving, not for greeting.", "Enchantée, Madame !": "Madame for a classmate of your age? This is formal; with a friend: Salut !"}, "why": "A friend says Salut → you answer <b>Salut !</b>", "sec": "l1", "card": "<div class=\"chat\"><div class=\"scene\">🧑🏽 <b>Rohan</b><span>a classmate · RRU cafeteria · 10 h · informal → tu</span></div><div class=\"bb them\"><span class=\"av\">🧑🏽</span><div><small>Rohan</small><p>Salut ! <button class=\"say sm\" data-say=\"Salut !\" data-pitch=\"1\" data-g=\"m\" aria-label=\"Listen\">🔊</button></p></div></div></div>", "gh": "Look again at the rule card for this point."}, {"s": "@@N : ___", "a": "Ça va bien, et toi ?", "r": "reg", "o": {"Je vais bien, et vous ?": "vous is formal (or plural). Rohan is a friend → et toi ?", "Je m'appelle @@N.": "He asked how you are, not your name.", "Ça va bien, et tu ?": "After et, French uses toi: et toi ? (not et tu)."}, "why": "Informal: Ça va bien, <b>et toi</b> ?", "sec": "l1", "card": "<div class=\"chat\"><div class=\"scene\">🧑🏽 <b>Rohan</b><span>a classmate · RRU cafeteria · 10 h · informal → tu</span></div><div class=\"bb them\"><span class=\"av\">🧑🏽</span><div><small>Rohan</small><p>Salut ! <button class=\"say sm\" data-say=\"Salut !\" data-pitch=\"1\" data-g=\"m\" aria-label=\"Listen\">🔊</button></p></div></div><div class=\"bb me\"><span class=\"av\">[[👨🏽|👩🏽]]</span><div><small>@@N (you)</small><p><b>Salut !</b> <button class=\"say sm\" data-say=\"Salut !\" data-pitch=\"1\" data-g=\"[[m|f]]\" data-me=\"1\" aria-label=\"Listen\">🔊</button></p></div></div><div class=\"bb them\"><span class=\"av\">🧑🏽</span><div><small>Rohan</small><p>Ça va ? <button class=\"say sm\" data-say=\"Ça va ?\" data-pitch=\"1\" data-g=\"m\" aria-label=\"Listen\">🔊</button></p></div></div></div>", "acc": ["Ça va bien, et toi ?", "Ça va, et toi ?", "Bien, et toi ?", "Ça va bien, merci, et toi ?"], "gh": "Look again at the rule card for this point."}, {"s": "@@N : ___", "a": "Je m'appelle @@N.", "r": "moi", "o": {"Tu t'appelles @@N.": "tu = you. To talk about yourself: je m'appelle.", "[[Il|Elle]] s'appelle @@N.": "[[il = he|elle = she]]. You are talking about yourself: je.", "Je appelle @@N.": "The verb is s'appeler: je <b>m'</b>appelle (me → m' before a vowel)."}, "why": "Je <b>m'</b><span class=\"stm\">appell</span><span class=\"end\">e</span> @@N.", "sec": "l1", "card": "<div class=\"chat\"><div class=\"scene\">🧑🏽 <b>Rohan</b><span>a classmate · RRU cafeteria · 10 h · informal → tu</span></div><div class=\"bb them\"><span class=\"av\">🧑🏽</span><div><small>Rohan</small><p>Salut ! <button class=\"say sm\" data-say=\"Salut !\" data-pitch=\"1\" data-g=\"m\" aria-label=\"Listen\">🔊</button></p></div></div><div class=\"bb me\"><span class=\"av\">[[👨🏽|👩🏽]]</span><div><small>@@N (you)</small><p><b>Salut !</b> <button class=\"say sm\" data-say=\"Salut !\" data-pitch=\"1\" data-g=\"[[m|f]]\" data-me=\"1\" aria-label=\"Listen\">🔊</button></p></div></div><div class=\"bb them\"><span class=\"av\">🧑🏽</span><div><small>Rohan</small><p>Ça va ? <button class=\"say sm\" data-say=\"Ça va ?\" data-pitch=\"1\" data-g=\"m\" aria-label=\"Listen\">🔊</button></p></div></div><div class=\"bb me\"><span class=\"av\">[[👨🏽|👩🏽]]</span><div><small>@@N (you)</small><p><b>Ça va bien, et toi ?</b> <button class=\"say sm\" data-say=\"Ça va bien, et toi ?\" data-pitch=\"1\" data-g=\"[[m|f]]\" data-me=\"1\" aria-label=\"Listen\">🔊</button></p></div></div><div class=\"bb them\"><span class=\"av\">🧑🏽</span><div><small>Rohan</small><p>Ça va ! Tu t'appelles comment ? <button class=\"say sm\" data-say=\"Ça va ! Tu t'appelles comment ?\" data-pitch=\"1\" data-g=\"m\" aria-label=\"Listen\">🔊</button></p></div></div></div>", "gh": "Look again at the rule card for this point."}, {"s": "@@N : ___", "a": "Oui, je suis [[étudiant|étudiante]].", "r": "moi", "o": {"Oui, je suis [[étudiante|étudiant]].": "[[You are a man: étudiant (no -e).|You are a woman: étudiant<b>e</b> (+e).]]", "Oui, tu es [[étudiant|étudiante]].": "Answer about yourself: je suis.", "Oui, je es [[étudiant|étudiante]].": "être with je → suis."}, "why": "Oui, je <b>suis</b> [[étudiant|étudiant<b>e</b>]].", "sec": "l1", "card": "<div class=\"chat\"><div class=\"scene\">🧑🏽 <b>Rohan</b><span>a classmate · RRU cafeteria · 10 h · informal → tu</span></div><div class=\"bb them\"><span class=\"av\">🧑🏽</span><div><small>Rohan</small><p>Ça va ? <button class=\"say sm\" data-say=\"Ça va ?\" data-pitch=\"1\" data-g=\"m\" aria-label=\"Listen\">🔊</button></p></div></div><div class=\"bb me\"><span class=\"av\">[[👨🏽|👩🏽]]</span><div><small>@@N (you)</small><p><b>Ça va bien, et toi ?</b> <button class=\"say sm\" data-say=\"Ça va bien, et toi ?\" data-pitch=\"1\" data-g=\"[[m|f]]\" data-me=\"1\" aria-label=\"Listen\">🔊</button></p></div></div><div class=\"bb them\"><span class=\"av\">🧑🏽</span><div><small>Rohan</small><p>Ça va ! Tu t'appelles comment ? <button class=\"say sm\" data-say=\"Ça va ! Tu t'appelles comment ?\" data-pitch=\"1\" data-g=\"m\" aria-label=\"Listen\">🔊</button></p></div></div><div class=\"bb me\"><span class=\"av\">[[👨🏽|👩🏽]]</span><div><small>@@N (you)</small><p><b>Je m'appelle @@N.</b> <button class=\"say sm\" data-say=\"Je m'appelle @@N.\" data-pitch=\"1\" data-g=\"[[m|f]]\" data-me=\"1\" aria-label=\"Listen\">🔊</button></p></div></div><div class=\"bb them\"><span class=\"av\">🧑🏽</span><div><small>Rohan</small><p>Moi, c'est Rohan. Tu es [[étudiant|étudiante]] ? <button class=\"say sm\" data-say=\"Moi, c'est Rohan. Tu es [[étudiant|étudiante]] ?\" data-pitch=\"1\" data-g=\"m\" aria-label=\"Listen\">🔊</button></p></div></div></div>", "acc": ["Oui, je suis [[étudiant|étudiante]].", "Je suis [[étudiant|étudiante]].", "Oui, je suis [[étudiant|étudiante]] à RRU."], "gh": "Look again at the rule card for this point."}, {"s": "@@N : ___", "a": "Salut !", "r": "bye", "o": {"Bonjour !": "Bonjour greets; here Rohan is leaving.", "Au revoir, Madame !": "Madame? Rohan is your friend: informal goodbye.", "Bonsoir !": "It's 10 h, and Rohan is leaving: an informal goodbye."}, "why": "Informal goodbye: <b>Salut !</b> / À plus tard ! / À bientôt !", "sec": "l1", "card": "<div class=\"chat\"><div class=\"scene\">🧑🏽 <b>Rohan</b><span>a classmate · RRU cafeteria · 10 h · informal → tu</span></div><div class=\"bb them\"><span class=\"av\">🧑🏽</span><div><small>Rohan</small><p>Ça va ! Tu t'appelles comment ? <button class=\"say sm\" data-say=\"Ça va ! Tu t'appelles comment ?\" data-pitch=\"1\" data-g=\"m\" aria-label=\"Listen\">🔊</button></p></div></div><div class=\"bb me\"><span class=\"av\">[[👨🏽|👩🏽]]</span><div><small>@@N (you)</small><p><b>Je m'appelle @@N.</b> <button class=\"say sm\" data-say=\"Je m'appelle @@N.\" data-pitch=\"1\" data-g=\"[[m|f]]\" data-me=\"1\" aria-label=\"Listen\">🔊</button></p></div></div><div class=\"bb them\"><span class=\"av\">🧑🏽</span><div><small>Rohan</small><p>Moi, c'est Rohan. Tu es [[étudiant|étudiante]] ? <button class=\"say sm\" data-say=\"Moi, c'est Rohan. Tu es [[étudiant|étudiante]] ?\" data-pitch=\"1\" data-g=\"m\" aria-label=\"Listen\">🔊</button></p></div></div><div class=\"bb me\"><span class=\"av\">[[👨🏽|👩🏽]]</span><div><small>@@N (you)</small><p><b>Oui, je suis [[étudiant|étudiante]].</b> <button class=\"say sm\" data-say=\"Oui, je suis [[étudiant|étudiante]].\" data-pitch=\"1\" data-g=\"[[m|f]]\" data-me=\"1\" aria-label=\"Listen\">🔊</button></p></div></div><div class=\"bb them\"><span class=\"av\">🧑🏽</span><div><small>Rohan</small><p>Oh, le cours commence ! À plus tard ! <button class=\"say sm\" data-say=\"Oh, le cours commence ! À plus tard !\" data-pitch=\"1\" data-g=\"m\" aria-label=\"Listen\">🔊</button></p></div></div></div>", "acc": ["Salut !", "Salut Rohan !", "À plus tard !", "À plus tard, Rohan !", "À bientôt !", "À bientôt, Rohan !", "À plus !", "Salut, à plus tard !"], "gh": "Look again at the rule card for this point."}, {"s": "@@N : ___", "a": "Bonsoir, Madame.", "r": "greet", "o": {"Bonjour, Madame.": "It's 19 h: after about 6 pm, say bonsoir.", "Salut, Claire !": "Salut + first name is for friends. She is a diplomat you don't know: formal.", "Bonsoir, Claire.": "Someone you don't know: Madame, not the first name."}, "why": "Evening + formal: <b>Bonsoir, Madame.</b>", "sec": "l2", "card": "<div class=\"chat\"><div class=\"scene\">👩🏼‍💼 <b>Mme Claire Dubois</b><span>a French diplomat · embassy reception · 19 h · formal → vous</span></div><div class=\"bb them\"><span class=\"av\">👩🏼‍💼</span><div><small>Mme Claire Dubois</small><p>Bonsoir, [[Monsieur|Mademoiselle]]. <button class=\"say sm\" data-say=\"Bonsoir, [[Monsieur|Mademoiselle]].\" data-pitch=\"1\" data-g=\"f\" aria-label=\"Listen\">🔊</button></p></div></div></div>", "acc": ["Bonsoir, Madame.", "Bonsoir Madame !", "Bonsoir, Madame Dubois."], "gh": "Look again at the rule card for this point."}, {"s": "@@N : ___", "a": "Je vais bien, merci. Et vous ?", "r": "reg", "o": {"Ça va, et toi ?": "toi is informal. She uses vous → answer with vous.", "Je vais bien, merci. Et toi ?": "Good start, but she is Madame: et vous ?", "Vous allez bien, merci.": "Answer about yourself: je vais bien."}, "why": "Formal: Je <span class=\"stm\">v</span><span class=\"end\">ais</span> bien, merci. <b>Et vous ?</b>", "sec": "l2", "card": "<div class=\"chat\"><div class=\"scene\">👩🏼‍💼 <b>Mme Claire Dubois</b><span>a French diplomat · embassy reception · 19 h · formal → vous</span></div><div class=\"bb them\"><span class=\"av\">👩🏼‍💼</span><div><small>Mme Claire Dubois</small><p>Bonsoir, [[Monsieur|Mademoiselle]]. <button class=\"say sm\" data-say=\"Bonsoir, [[Monsieur|Mademoiselle]].\" data-pitch=\"1\" data-g=\"f\" aria-label=\"Listen\">🔊</button></p></div></div><div class=\"bb me\"><span class=\"av\">[[👨🏽|👩🏽]]</span><div><small>@@N (you)</small><p><b>Bonsoir, Madame.</b> <button class=\"say sm\" data-say=\"Bonsoir, Madame.\" data-pitch=\"1\" data-g=\"[[m|f]]\" data-me=\"1\" aria-label=\"Listen\">🔊</button></p></div></div><div class=\"bb them\"><span class=\"av\">👩🏼‍💼</span><div><small>Mme Claire Dubois</small><p>Comment allez-vous ? <button class=\"say sm\" data-say=\"Comment allez-vous ?\" data-pitch=\"1\" data-g=\"f\" aria-label=\"Listen\">🔊</button></p></div></div></div>", "acc": ["Je vais bien, merci. Et vous ?", "Je vais bien, et vous ?", "Très bien, merci. Et vous ?", "Je vais bien, merci, et vous ?"], "gh": "Look again at the rule card for this point."}, {"s": "@@N : ___", "a": "Je viens de Surat.", "r": "moi", "o": {"Je vient de Surat.": "je → vien<b>s</b> (-s). vient is for il / elle.", "Je viens à Surat.": "Origin = venir <b>de</b> + city.", "Vous venez de Surat.": "About yourself: je viens."}, "why": "Je <span class=\"stm\">vien</span><span class=\"end\">s</span> <b>de</b> Surat.", "sec": "l2", "card": "<div class=\"chat\"><div class=\"scene\">👩🏼‍💼 <b>Mme Claire Dubois</b><span>a French diplomat · embassy reception · 19 h · formal → vous</span></div><div class=\"bb them\"><span class=\"av\">👩🏼‍💼</span><div><small>Mme Claire Dubois</small><p>Bonsoir, [[Monsieur|Mademoiselle]]. <button class=\"say sm\" data-say=\"Bonsoir, [[Monsieur|Mademoiselle]].\" data-pitch=\"1\" data-g=\"f\" aria-label=\"Listen\">🔊</button></p></div></div><div class=\"bb me\"><span class=\"av\">[[👨🏽|👩🏽]]</span><div><small>@@N (you)</small><p><b>Bonsoir, Madame.</b> <button class=\"say sm\" data-say=\"Bonsoir, Madame.\" data-pitch=\"1\" data-g=\"[[m|f]]\" data-me=\"1\" aria-label=\"Listen\">🔊</button></p></div></div><div class=\"bb them\"><span class=\"av\">👩🏼‍💼</span><div><small>Mme Claire Dubois</small><p>Comment allez-vous ? <button class=\"say sm\" data-say=\"Comment allez-vous ?\" data-pitch=\"1\" data-g=\"f\" aria-label=\"Listen\">🔊</button></p></div></div><div class=\"bb me\"><span class=\"av\">[[👨🏽|👩🏽]]</span><div><small>@@N (you)</small><p><b>Je vais bien, merci. Et vous ?</b> <button class=\"say sm\" data-say=\"Je vais bien, merci. Et vous ?\" data-pitch=\"1\" data-g=\"[[m|f]]\" data-me=\"1\" aria-label=\"Listen\">🔊</button></p></div></div><div class=\"bb them\"><span class=\"av\">👩🏼‍💼</span><div><small>Mme Claire Dubois</small><p>Très bien, merci. Je m'appelle Claire Dubois, je travaille au ministère de la Culture. Vous venez d'où ? <button class=\"say sm\" data-say=\"Très bien, merci. Je m'appelle Claire Dubois, je travaille au ministère de la Culture. Vous venez d'où ?\" data-pitch=\"1\" data-g=\"f\" aria-label=\"Listen\">🔊</button></p></div></div></div>", "acc": ["Je viens de Surat."], "gh": "Look again at the rule card for this point."}, {"s": "@@N : ___", "a": "Au revoir, Madame !", "r": "bye", "o": {"Salut !": "Salut is informal. She is Madame: Au revoir, Madame !", "Salut, Claire !": "Salut + first name is for friends.", "À plus tard !": "Informal. With Madame: Au revoir, Madame !"}, "why": "Formal goodbye: <b>Au revoir, Madame !</b> (Bonne soirée !)", "sec": "l2", "card": "<div class=\"chat\"><div class=\"scene\">👩🏼‍💼 <b>Mme Claire Dubois</b><span>a French diplomat · embassy reception · 19 h · formal → vous</span></div><div class=\"bb them\"><span class=\"av\">👩🏼‍💼</span><div><small>Mme Claire Dubois</small><p>Comment allez-vous ? <button class=\"say sm\" data-say=\"Comment allez-vous ?\" data-pitch=\"1\" data-g=\"f\" aria-label=\"Listen\">🔊</button></p></div></div><div class=\"bb me\"><span class=\"av\">[[👨🏽|👩🏽]]</span><div><small>@@N (you)</small><p><b>Je vais bien, merci. Et vous ?</b> <button class=\"say sm\" data-say=\"Je vais bien, merci. Et vous ?\" data-pitch=\"1\" data-g=\"[[m|f]]\" data-me=\"1\" aria-label=\"Listen\">🔊</button></p></div></div><div class=\"bb them\"><span class=\"av\">👩🏼‍💼</span><div><small>Mme Claire Dubois</small><p>Très bien, merci. Je m'appelle Claire Dubois, je travaille au ministère de la Culture. Vous venez d'où ? <button class=\"say sm\" data-say=\"Très bien, merci. Je m'appelle Claire Dubois, je travaille au ministère de la Culture. Vous venez d'où ?\" data-pitch=\"1\" data-g=\"f\" aria-label=\"Listen\">🔊</button></p></div></div><div class=\"bb me\"><span class=\"av\">[[👨🏽|👩🏽]]</span><div><small>@@N (you)</small><p><b>Je viens de Surat.</b> <button class=\"say sm\" data-say=\"Je viens de Surat.\" data-pitch=\"1\" data-g=\"[[m|f]]\" data-me=\"1\" aria-label=\"Listen\">🔊</button></p></div></div><div class=\"bb them\"><span class=\"av\">👩🏼‍💼</span><div><small>Mme Claire Dubois</small><p>Ah, Surat ! C'est une belle ville. Bonne soirée ! Au revoir. <button class=\"say sm\" data-say=\"Ah, Surat ! C'est une belle ville. Bonne soirée ! Au revoir.\" data-pitch=\"1\" data-g=\"f\" aria-label=\"Listen\">🔊</button></p></div></div></div>", "acc": ["Au revoir, Madame !", "Au revoir !", "Bonne soirée, Madame ! Au revoir !", "Au revoir, Madame, bonne soirée !", "Merci, au revoir, Madame !", "Au revoir Madame, à bientôt !", "Bonne soirée, Madame !"], "gh": "Look again at the rule card for this point."}, {"s": "@@N : ___", "a": "Oui, un peu.", "r": "moi", "o": {"Oui, vous parlez français.": "About yourself: je parle. (Or simply: Oui, un peu.)", "Oui, je parles français.": "je → parl<b>e</b> (-e). -es is for tu.", "Oui, nous parlez français.": "nous → parlons. And you speak for yourself: je."}, "why": "<b>Oui, un peu.</b> (= je parle un peu français)", "sec": "l3", "card": "<div class=\"chat\"><div class=\"scene\">👨🏻 <b>Lucas Martin</b><span>a stranger · conference coffee break · vous, then tu</span></div><div class=\"bb them\"><span class=\"av\">👨🏻</span><div><small>Lucas Martin</small><p>Excusez-moi, vous parlez français ? <button class=\"say sm\" data-say=\"Excusez-moi, vous parlez français ?\" data-pitch=\"1\" data-g=\"m\" aria-label=\"Listen\">🔊</button></p></div></div></div>", "acc": ["Oui, un peu.", "Un peu.", "Oui, je parle un peu français.", "Oui, je parle un peu."], "gh": "Look again at the rule card for this point."}, {"s": "@@N : ___", "a": "Oui ! Tu viens d'où ?", "r": "reg", "o": {"Oui ! Vous venez d'où ?": "You just agreed to « se tutoyer » (use tu) → tu viens.", "Oui ! Tu vient d'où ?": "tu → vien<b>s</b> (-s).", "Oui ! Tu viens où ?": "Origin = from where = <b>d'où</b>."}, "why": "On se tutoie → <b>tu</b> <span class=\"stm\">vien</span><span class=\"end\">s</span> d'où ?", "sec": "l3", "card": "<div class=\"chat\"><div class=\"scene\">👨🏻 <b>Lucas Martin</b><span>a stranger · conference coffee break · vous, then tu</span></div><div class=\"bb them\"><span class=\"av\">👨🏻</span><div><small>Lucas Martin</small><p>Excusez-moi, vous parlez français ? <button class=\"say sm\" data-say=\"Excusez-moi, vous parlez français ?\" data-pitch=\"1\" data-g=\"m\" aria-label=\"Listen\">🔊</button></p></div></div><div class=\"bb me\"><span class=\"av\">[[👨🏽|👩🏽]]</span><div><small>@@N (you)</small><p><b>Oui, un peu.</b> <button class=\"say sm\" data-say=\"Oui, un peu.\" data-pitch=\"1\" data-g=\"[[m|f]]\" data-me=\"1\" aria-label=\"Listen\">🔊</button></p></div></div><div class=\"bb them\"><span class=\"av\">👨🏻</span><div><small>Lucas Martin</small><p>Super ! Moi, c'est Lucas. On se tutoie ? <button class=\"say sm\" data-say=\"Super ! Moi, c'est Lucas. On se tutoie ?\" data-pitch=\"1\" data-g=\"m\" aria-label=\"Listen\">🔊</button></p></div></div></div>", "acc": ["Oui ! Tu viens d'où ?", "Tu viens d'où ?", "Oui, tu viens d'où ?", "D'accord ! Tu viens d'où ?"], "gh": "Look again at the rule card for this point."}, {"s": "@@N : ___", "a": "Je viens de Surat, en Inde.", "r": "moi", "o": {"Je viens de Surat, au Inde.": "l'Inde is feminine → <b>en</b> Inde.", "Je viens à Surat, en Inde.": "Origin = venir <b>de</b>.", "Tu viens de Surat, en Inde.": "About yourself: je viens."}, "why": "Je <span class=\"stm\">vien</span><span class=\"end\">s</span> <b>de</b> Surat, <b>en</b> Inde.", "sec": "l3", "card": "<div class=\"chat\"><div class=\"scene\">👨🏻 <b>Lucas Martin</b><span>a stranger · conference coffee break · vous, then tu</span></div><div class=\"bb them\"><span class=\"av\">👨🏻</span><div><small>Lucas Martin</small><p>Excusez-moi, vous parlez français ? <button class=\"say sm\" data-say=\"Excusez-moi, vous parlez français ?\" data-pitch=\"1\" data-g=\"m\" aria-label=\"Listen\">🔊</button></p></div></div><div class=\"bb me\"><span class=\"av\">[[👨🏽|👩🏽]]</span><div><small>@@N (you)</small><p><b>Oui, un peu.</b> <button class=\"say sm\" data-say=\"Oui, un peu.\" data-pitch=\"1\" data-g=\"[[m|f]]\" data-me=\"1\" aria-label=\"Listen\">🔊</button></p></div></div><div class=\"bb them\"><span class=\"av\">👨🏻</span><div><small>Lucas Martin</small><p>Super ! Moi, c'est Lucas. On se tutoie ? <button class=\"say sm\" data-say=\"Super ! Moi, c'est Lucas. On se tutoie ?\" data-pitch=\"1\" data-g=\"m\" aria-label=\"Listen\">🔊</button></p></div></div><div class=\"bb me\"><span class=\"av\">[[👨🏽|👩🏽]]</span><div><small>@@N (you)</small><p><b>Oui ! Tu viens d'où ?</b> <button class=\"say sm\" data-say=\"Oui ! Tu viens d'où ?\" data-pitch=\"1\" data-g=\"[[m|f]]\" data-me=\"1\" aria-label=\"Listen\">🔊</button></p></div></div><div class=\"bb them\"><span class=\"av\">👨🏻</span><div><small>Lucas Martin</small><p>Je viens de Lyon, en France. Je suis journaliste. Et toi ? <button class=\"say sm\" data-say=\"Je viens de Lyon, en France. Je suis journaliste. Et toi ?\" data-pitch=\"1\" data-g=\"m\" aria-label=\"Listen\">🔊</button></p></div></div></div>", "gh": "Look again at the rule card for this point."}, {"s": "@@N : ___", "a": "À bientôt, Lucas !", "r": "bye", "o": {"Au revoir, Madame !": "Lucas is now a friend (tu) — and Madame is for a woman!", "Bonjour, Lucas !": "Bonjour greets; he is leaving.", "Bonsoir, Monsieur.": "Too formal for a new friend: À bientôt / Salut."}, "why": "Informal goodbye to a friend: <b>À bientôt</b> / Salut / À plus tard.", "sec": "l3", "card": "<div class=\"chat\"><div class=\"scene\">👨🏻 <b>Lucas Martin</b><span>a stranger · conference coffee break · vous, then tu</span></div><div class=\"bb them\"><span class=\"av\">👨🏻</span><div><small>Lucas Martin</small><p>Super ! Moi, c'est Lucas. On se tutoie ? <button class=\"say sm\" data-say=\"Super ! Moi, c'est Lucas. On se tutoie ?\" data-pitch=\"1\" data-g=\"m\" aria-label=\"Listen\">🔊</button></p></div></div><div class=\"bb me\"><span class=\"av\">[[👨🏽|👩🏽]]</span><div><small>@@N (you)</small><p><b>Oui ! Tu viens d'où ?</b> <button class=\"say sm\" data-say=\"Oui ! Tu viens d'où ?\" data-pitch=\"1\" data-g=\"[[m|f]]\" data-me=\"1\" aria-label=\"Listen\">🔊</button></p></div></div><div class=\"bb them\"><span class=\"av\">👨🏻</span><div><small>Lucas Martin</small><p>Je viens de Lyon, en France. Je suis journaliste. Et toi ? <button class=\"say sm\" data-say=\"Je viens de Lyon, en France. Je suis journaliste. Et toi ?\" data-pitch=\"1\" data-g=\"m\" aria-label=\"Listen\">🔊</button></p></div></div><div class=\"bb me\"><span class=\"av\">[[👨🏽|👩🏽]]</span><div><small>@@N (you)</small><p><b>Je viens de Surat, en Inde.</b> <button class=\"say sm\" data-say=\"Je viens de Surat, en Inde.\" data-pitch=\"1\" data-g=\"[[m|f]]\" data-me=\"1\" aria-label=\"Listen\">🔊</button></p></div></div><div class=\"bb them\"><span class=\"av\">👨🏻</span><div><small>Lucas Martin</small><p>Ah, l'Inde ! Super ! Bon, je dois partir. À bientôt, @@N ! <button class=\"say sm\" data-say=\"Ah, l'Inde ! Super ! Bon, je dois partir. À bientôt, @@N !\" data-pitch=\"1\" data-g=\"m\" aria-label=\"Listen\">🔊</button></p></div></div></div>", "acc": ["À bientôt, Lucas !", "À bientôt !", "Salut, Lucas !", "Salut !", "À plus tard, Lucas !", "À plus tard !", "Au revoir, Lucas !", "Au revoir, Lucas, à bientôt !", "Salut Lucas, à bientôt !"], "gh": "Look again at the rule card for this point."}, {"s": "@@N (to Rohan) : « Rohan, ___ Lucas. »", "a": "je te présente", "r": "pres", "o": {"je vous présente": "Rohan is a friend (tu) → je <b>te</b> présente.", "je présente": "présenter needs « to you »: je <b>te</b> présente.", "tu me présentes": "YOU are presenting: je te présente."}, "why": "To a friend: je <b>te</b> <span class=\"stm\">présent</span><span class=\"end\">e</span>…", "sec": "l4", "card": "<div class=\"chat\"><div class=\"scene\">🎉 <b>A party at RRU</b><span>you present your new friends · je → tu / vous → il / elle</span></div><div class=\"bb them\"><span class=\"av\">🧑🏽</span><div><small>Rohan</small><p>@@N ! Salut ! C'est qui ? <button class=\"say sm\" data-say=\"@@N ! Salut ! C'est qui ?\" data-pitch=\"1\" data-g=\"m\" aria-label=\"Listen\">🔊</button></p></div></div></div>", "gh": "Look again at the rule card for this point."}, {"s": "@@N : « ___ est journaliste. »", "a": "Il", "r": "ilelle", "o": {"Elle": "Lucas is a man → <b>il</b>.", "Tu": "You are talking ABOUT Lucas to Rohan → il.", "Je": "je = you. Lucas → il."}, "why": "About Lucas → <b>il</b> est…", "sec": "l4", "card": "<div class=\"chat\"><div class=\"scene\">🎉 <b>A party at RRU</b><span>you present your new friends · je → tu / vous → il / elle</span></div><div class=\"bb me\"><span class=\"av\">[[👨🏽|👩🏽]]</span><div><small>@@N (you)</small><p>Rohan, je te présente Lucas. <button class=\"say sm\" data-say=\"Rohan, je te présente Lucas.\" data-pitch=\"1\" data-g=\"[[m|f]]\" data-me=\"1\" aria-label=\"Listen\">🔊</button></p></div></div></div>", "gh": "Look again at the rule card for this point."}, {"s": "@@N (to Mme Dubois) : « Madame, ___ Rohan, un ami. »", "a": "je vous présente", "r": "pres", "o": {"je te présente": "Madame Dubois → formal: je <b>vous</b> présente.", "tu présentes": "You are presenting: je vous présente.", "je présente": "présenter needs « to you »: je vous présente."}, "why": "Formal: je <b>vous</b> <span class=\"stm\">présent</span><span class=\"end\">e</span>…", "sec": "l4", "card": "<div class=\"chat\"><div class=\"scene\">🎉 <b>A party at RRU</b><span>you present your new friends · je → tu / vous → il / elle</span></div><div class=\"bb them\"><span class=\"av\">🧑🏽</span><div><small>Rohan</small><p>Enchanté, Lucas ! <button class=\"say sm\" data-say=\"Enchanté, Lucas !\" data-pitch=\"1\" data-g=\"m\" aria-label=\"Listen\">🔊</button></p></div></div><div class=\"bb them\"><span class=\"av\">👩🏼‍💼</span><div><small>Mme Claire Dubois</small><p>Bonsoir, @@N ! <button class=\"say sm\" data-say=\"Bonsoir, @@N !\" data-pitch=\"1\" data-g=\"f\" aria-label=\"Listen\">🔊</button></p></div></div></div>", "gh": "Look again at the rule card for this point."}, {"s": "@@N (to Lucas) : « Lucas, voici Madame Dubois. ___ travaille au ministère de la Culture. »", "a": "Elle", "r": "ilelle", "o": {"il": "Madame Dubois is a woman → <b>elle</b>.", "vous": "You talk ABOUT her to Lucas → elle.", "je": "je = you. Madame Dubois → elle."}, "why": "About Madame Dubois → <b>elle</b>.", "sec": "l4", "card": "<div class=\"chat\"><div class=\"scene\">🎉 <b>A party at RRU</b><span>you present your new friends · je → tu / vous → il / elle</span></div><div class=\"bb them\"><span class=\"av\">👩🏼‍💼</span><div><small>Mme Claire Dubois</small><p>Enchantée, Rohan ! <button class=\"say sm\" data-say=\"Enchantée, Rohan !\" data-pitch=\"1\" data-g=\"f\" aria-label=\"Listen\">🔊</button></p></div></div></div>", "gh": "Look again at the rule card for this point."}];
+const VERDICTS = ["Excellent ! 🎉 Your network is growing: you greet, ask and present like a diplomat.", "Bien ! 👍 Look at your errors below.", "Read the rule cards again and replay the dialogues. 💪"];
+const TWOSTEP = true;
+const ADVICE = "Then do it for real: greet your neighbour, ask three questions, and present them to another student: « Je te présente … Il / Elle … »";
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const $=id=>document.getElementById(id);
+let order,i,res,view="q";
+function groupShuffle(arr){const g={};arr.forEach((q,k)=>{const id=q.g===undefined?'_'+k:q.g;(g[id]=g[id]||[]).push(q)});return shuffle(Object.values(g)).flat()}
+function start(){order=SECS.map(S=>{const L=Q.filter(q=>q.sec===S.id);if(typeof TWOSTEP!=='undefined'&&TWOSTEP){const B=S.keep?L:shuffle(L);return B.map(q=>({...q,w:false,ph:1})).concat(B.map(q=>({...q,w:true,ph:2})))}return S.keep?L:shuffle(L.filter(q=>!q.w)).concat(shuffle(L.filter(q=>q.w)))}).flat().map(q=>({...q,o:{...q.o}})).map(q=>({...q,opts:shuffle([q.a,...Object.keys(q.o)])}));res=order.map(()=>({picks:[],done:false,st:null}));i=0;view="q";show()}
+const frontier=()=>{const k=res.findIndex(r=>!r.done);return k<0?order.length-1:k};
+const allDone=()=>res.every(r=>r.done);
+function dots(){const f=frontier();$("dots").innerHTML=order.map((_,k)=>{const r=res[k];let c="dot";if(r.done)c+=r.st===1?" r1":r.st===2?" r2":" r0";if(k===i&&view==="q")c+=" cur";const can=r.done||k===f;const sep=k>0&&order[k].sec!==order[k-1].sec?`<span class="sep">${SECS.find(S=>S.id===order[k].sec).icon}</span>`:(k>0&&order[k].ph===2&&order[k-1].ph===1?`<span class="sep">✍️</span>`:"");return sep+`<button class="${c}" ${can?"":"disabled"} data-k="${k}" aria-label="Question ${k+1}">${k+1}</button>`}).join("");
+ document.querySelectorAll("#dots .dot").forEach(b=>b.onclick=()=>{i=+b.dataset.k;view="q";show()})}
+function blankHtml(q,r){if(!q.s.includes("___"))return q.s;const cls=r.done?(r.st===0?"blank shown":"blank ok"):"blank";return q.s.replace("___",`<span class="${cls}">${r.done?q.a:"?"}</span>`)}
+function show(){const q=order[i],r=res[i],R=RULES[q.r];$("qtitle").textContent=SECS.find(S=>S.id===q.sec).name+(q.ph===1?" · ① Choose":q.ph===2?" · ② Write":"");$("counter").textContent=`${i+1} / ${order.length}`;dots();
+ const long=q.opts.some(x=>x.length>20);
+ const remaining=q.opts.filter(o=>!r.picks.includes(o));
+ let fb="";const wrong=r.picks.filter(p=>p!==q.a);
+ if(!r.done&&wrong.length){fb=`<div class="feedback hint">Not quite: « ${wrong[wrong.length-1]} ». <small>${q.o[wrong[wrong.length-1]]}</small><small><b>Think again and try another answer.</b></small></div>`}
+ if(r.done){if(r.st===1)fb=`<div class="feedback ok">Très bien ! <small>${q.why}</small></div>`;
+  else if(r.st===2)fb=`<div class="feedback ok">Oui, c'est ça ! <small>Your first choice « ${wrong[0]} »: ${q.o[wrong[0]]}</small><small>${q.why}</small></div>`;
+  else fb=`<div class="feedback no">The answer is « ${q.a} ». ${wrong.map(w=>`<small>You chose « ${w} »: ${q.o[w]}</small>`).join("")}<small><b>Rule:</b> ${q.why}</small></div>`}
+ $("stage").innerHTML=`${q.card?q.card:""}<p class="sentence">${blankHtml(q,r)}</p>
+  ${q.w?`<div class="wbox"><label for="win">${q.ph===2?"✍️ Now write it yourself (same answer you chose before)":"✍️ Write your answer"}</label><div class="wrow"><input id="win" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Write the missing word(s)" ${r.done?"disabled":""} value="${(r.done?q.a:(r.picks[r.picks.length-1]||"")).replace(/"/g,"&quot;")}"><button class="btn" id="wchk" ${r.done?"disabled":""}>Check ✔</button></div><div class="wkeys">${["é","è","ê","à","ç","ô","î","'"].map(k=>`<button class="wk" data-k="${k}" ${r.done?"disabled":""}>${k}</button>`).join("")}</div></div>`:""}
+  <div class="opts" style="${q.w?"display:none;":""}${long?"grid-template-columns:1fr":""}">${q.opts.map(o=>{let c="opt "+R.k;if(r.picks.includes(o)&&o!==q.a)c+=" wrong";if(r.done&&o===q.a)c+=" right";const dis=r.done||r.picks.includes(o);return `<button class="${c}" ${dis?"disabled":""} data-o="${o.replace(/"/g,"&quot;")}" style="${long?"text-align:left;padding:12px 16px":""}">${o}</button>`}).join("")}</div>
+  <div id="fb">${fb}</div>
+  <div class="actions navrow">
+   <button class="btn ghost" id="prev" ${i===0?"disabled":""}>← Previous</button>
+   ${i<order.length-1?`<button class="btn" id="next" ${r.done?"":"disabled"}>Next →</button>`:""}
+   ${allDone()?`<button class="btn" id="rep">See my results</button>`:""}
+  </div>`;
+ document.querySelectorAll("#stage .opt").forEach(b=>b.onclick=()=>pick(b.dataset.o));
+ if(q.w&&!r.done){const w=$("win");w.focus();const go=()=>{const v=w.value;if(v.trim())typed(v)};$("wchk").onclick=go;w.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();go()}};
+  let cs=w.value.length,ce=w.value.length;const keep=()=>{if(document.activeElement===w){cs=w.selectionStart;ce=w.selectionEnd}};["keyup","click","select","input","focus","touchend","mouseup"].forEach(ev=>w.addEventListener(ev,()=>setTimeout(keep,0)));
+  document.querySelectorAll(".wk").forEach(k=>{k.onpointerdown=e=>e.preventDefault();k.onmousedown=e=>e.preventDefault();k.onclick=()=>{if(document.activeElement===w){cs=w.selectionStart;ce=w.selectionEnd}const a=Math.min(cs,w.value.length),b=Math.min(ce,w.value.length);w.value=w.value.slice(0,a)+k.dataset.k+w.value.slice(b);w.focus();w.selectionStart=w.selectionEnd=cs=ce=a+k.dataset.k.length}})}
+ $("prev").onclick=()=>{i--;show()};
+ if($("next"))$("next").onclick=()=>{i++;show()};
+ if($("rep"))$("rep").onclick=report;
+ const n=$("next")||$("rep");if(r.done&&n&&!q.w)n.focus()}
+function pick(o){const q=order[i],r=res[i];if(r.done||r.picks.includes(o))return;r.picks.push(o);
+ const left=q.w?[0,0,0]:q.opts.filter(x=>!r.picks.includes(x));
+ if(o===q.a){r.done=true;r.st=r.picks.length===1?1:2}
+ else if(r.picks.length>=2||left.length===1){r.done=true;r.st=0}
+ show()}
+function report(){view="r";dots();$("qtitle").textContent="Vos résultats"+((($("sname")||{}).value||"").trim()?" · "+$("sname").value.trim():"");$("counter").textContent="Résultats";
+ const g=s=>res.filter(r=>r.st===s).length,pts=g(1)+g(2)*0.5,pct=Math.round(pts/order.length*100);
+ const by={};order.forEach((q,k)=>{by[q.r]=by[q.r]||{n:0,first:0};by[q.r].n++;if(res[k].st===1)by[q.r].first++});
+ const strong=Object.entries(by).filter(([k,v])=>v.first===v.n).map(([k,v])=>`<li class="k-good"><span class="q">✔ ${RULES[k].name}</span><span class="meta">${v.n} / ${v.n} right first time</span></li>`);
+ const part=Object.entries(by).filter(([k,v])=>v.first<v.n&&v.first/v.n>=.5).map(([k,v])=>`<li class="k-mid"><span class="q">◐ ${RULES[k].name}</span><span class="meta">${v.first} / ${v.n} right first time, nearly there</span></li>`);
+ const weak=Object.entries(by).sort((a,b)=>a[1].first/a[1].n-b[1].first/b[1].n)[0];
+ const errs=order.map((q,k)=>({q,r:res[k]})).filter(x=>x.r.st!==1);
+ const verdict=pct>=90?VERDICTS[0]:pct>=70?VERDICTS[1]:VERDICTS[2];
+ $("stage").innerHTML=`<div class="report">
+  <div class="score"><div class="big">${pts}<small> / ${order.length}</small></div><p class="verdict">${verdict}</p></div>
+  <div class="tally"><div class="t" style="--c:var(--good);--s:var(--good-soft)"><b>${g(1)}</b><span>right first time</span></div><div class="t" style="--c:var(--warn);--s:var(--warn-soft)"><b>${g(2)}</b><span>right on second try (½ point)</span></div><div class="t" style="--c:var(--bad);--s:var(--bad-soft)"><b>${g(0)}</b><span>to review</span></div></div>
+  <h3>Points forts</h3>
+  ${strong.length||part.length?`<ul class="mist">${strong.join("")}${part.join("")}</ul>`:`<p class="meta">Keep going: every rule below is worth one more look.</p>`}
+  <h3>Erreurs à revoir</h3>
+  ${errs.length?`<ul class="mist">${errs.map(({q,r})=>{const w=r.picks.filter(p=>p!==q.a);return `<li class="${RULES[q.r].k}"><span class="q">${q.s.includes("___")?q.s.replace("___","<u>"+q.a+"</u>"):q.s+" → <u>"+q.a+"</u>"}</span>${w.map(x=>`<span class="meta">You chose <s>${x}</s>: ${q.o[x]}</span>`).join("")}<span class="meta"><b>Rule (${RULES[q.r].name}):</b> ${q.why}</span></li>`}).join("")}</ul>`:`<p class="meta">No errors. Parfait !</p>`}
+  <p class="advice">${errs.length?`<b>Your rule to practise:</b> ${RULES[weak[0]].name}. ${ADVICE}`:`<b>Parfait !</b> ${ADVICE}`}</p>
+  <div class="actions"><button class="btn ghost" id="review">← Review my answers</button><button class="btn ghost" id="pick2">🎯 Choose another level</button><button class="btn" id="again">Try again (new order)</button></div></div>`;
+ $("review").onclick=()=>{i=0;view="q";show()};$("again").onclick=start;$("pick2").onclick=showPicker}
+
+function tabs(cur){$("lvltabs").innerHTML=`<span style="align-self:center;font-weight:700;font-size:.85rem">🎯 Level:</span>`+ALLSECS.map(S=>`<button class="lt ${cur===S.id?"on":""}" data-id="${S.id}" title="${S.learn}">${S.icon} ${S.id.slice(1)}</button>`).join("")+`<button class="lt ${cur==="all"?"on":""}" data-id="all">⭐ All</button><button class="lt ${cur==="menu"?"on":""}" data-id="menu">☰ Menu</button>`;
+ document.querySelectorAll(".lt").forEach(b=>b.onclick=()=>{const id=b.dataset.id;if(id==="menu"){showPicker();return}pickLevel(id)})}
+function pickLevel(id){SECS=id==="all"?ALLSECS:ALLSECS.filter(S=>S.id===id);start();tabs(id);document.querySelector(".quiz").scrollIntoView({behavior:"smooth"})}
+function showPicker(){view="p";tabs("menu");$("qtitle").textContent="Choose your level 🎯";$("counter").textContent="";$("dots").innerHTML="";
+ const n=id=>Q.filter(q=>q.sec===id).length;
+ $("stage").innerHTML=`<p class="sentence" style="font-size:1rem">Each level trains one thing. Do them in order, or pick the one you need.</p><div class="lvls">${ALLSECS.map(S=>`<button class="lvl" data-id="${S.id}"><b>${S.name}</b><span>${S.learn}</span><em>${n(S.id)} questions</em></button>`).join("")}<button class="lvl all" data-id="all"><b>⭐ All levels</b><span>Everything, from level 1 to level 5.</span><em>${Q.length} questions</em></button></div>`;
+ document.querySelectorAll(".lvl").forEach(b=>b.onclick=()=>pickLevel(b.dataset.id))}
+showPicker();
+const norm=t=>t.replace(/[’‘`]/g,"'").replace(/[.!?,;:«»"…]/g," ").replace(/\s+/g," ").replace(/\s*'\s*/g,"'").trim().toLowerCase();
+const noAcc=t=>t.normalize("NFD").replace(/[̀-ͯ]/g,"");
+function diag(q,v){const n=norm(v),acc=(q.acc||[q.a]).map(norm);
+ for(const k of Object.keys(q.o)){if(norm(k)===n)return q.o[k]}
+ if(acc.some(a=>noAcc(a)===noAcc(n)))return "Almost! Check the accents: compare each letter with an accent (é, è, à…).";
+ const a=norm(q.a);
+ if(/\bpas\b/.test(a)&&!/\bpas\b/.test(n))return "pas is missing: the negation is a sandwich, ne … pas.";
+ if(/(^|\s)(ne |n')/.test(a)&&!/(^|\s)(ne |n')/.test(n))return "ne (or n') is missing before the verb.";
+ if(/(^|\s)ne [aeiouéèêh]/.test(n))return "Before a vowel or a silent h, ne becomes n'.";
+ if(n.split(" ").length!==a.split(" ").length)return "Count the words: something is missing or extra. "+(q.gh||"");
+ return q.gh||"Look again at the rule card for this point.";}
+function typed(v){const q=order[i],r=res[i];if(r.done)return;const n=norm(v);
+ if(r.picks.map(norm).includes(n))return;
+ const ok=(q.acc||[q.a]).map(norm).includes(n);
+ if(!ok){q.o[v.trim()]=diag(q,v)}
+ pick(ok?q.a:v.trim())}
+
+document.addEventListener("click",e=>{const b=e.target.closest("[data-say]");if(b){e.preventDefault();speak(b.dataset.say,+(b.dataset.pitch||1),b.dataset.g,!!b.dataset.me)}});
+let AUTOSAY=true;try{AUTOSAY=localStorage.getItem("autosay")!=="0"}catch(e){}
+const _showA=show;let _lastAuto=-1,_spokenDone={};
+show=function(){_showA();if(typeof view!=="undefined"&&view!=="q")return;const q=order[i],r=res[i];if(!q||!AUTOSAY)return;
+ if(r.done&&!_spokenDone[i]){_spokenDone[i]=1;const me=document.querySelector(".chat [data-me]");speak(fullLine(q),1,me?me.dataset.g:(typeof PG!=="undefined"&&PG?PG:undefined),true);return}
+ if(i!==_lastAuto){_lastAuto=i;const th=[...document.querySelectorAll(".chat .bb.them [data-say]")].pop();if(th)setTimeout(()=>speak(th.dataset.say,+(th.dataset.pitch||1),th.dataset.g,false),250)}};
+const _startA=start;start=function(){_spokenDone={};_lastAuto=-1;_startA()};
+function fullLine(q){let t=(q.s||"").includes("___")?q.s.replace("___",q.a):q.a;t=t.replace(/<[^>]+>/g,"");
+ const c=t.indexOf(" : ");if(c>-1&&c<40)t=t.slice(c+3);t=t.replace(/\([^)]*\)\s*$/,"").replace(/[«»]/g,"").trim();return t}
+function autoBtn(){const b=document.getElementById("autosay");if(b)b.textContent=AUTOSAY?"🔊 Voices: on":"🔇 Voices: off"}
+document.addEventListener("click",e=>{if(e.target.id==="autosay"){AUTOSAY=!AUTOSAY;try{localStorage.setItem("autosay",AUTOSAY?"1":"0")}catch(x){}autoBtn();if(!AUTOSAY&&"speechSynthesis" in window)speechSynthesis.cancel()}});
+
+let PN="",PG="";try{PN=localStorage.getItem("pname")||"";PG=localStorage.getItem("pgen")||""}catch(e){}
+const Q0=JSON.parse(JSON.stringify(Q));
+const cleanName=t=>t.replace(/[^A-Za-zÀ-ÿऀ-ॿ' -]/g,"").replace(/\s+/g," ").trim().slice(0,30);
+function tok(s){if(typeof s!=="string")return s;return s.replace(/@@N/g,PN).replace(/\[\[([^|\]]*)\|([^\]]*)\]\]/g,(m,a,b)=>PG==="m"?a:b)}
+function deep(x){if(Array.isArray(x))return x.map(deep);if(x&&typeof x==="object"){const o={};for(const k in x)o[tok(k)]=deep(x[k]);return o}return tok(x)}
+function personaReady(){PN=cleanName(($("sname")||{}).value||PN);return PN&&PG}
+function paintPersona(){const n=$("sname");if(n&&!n.value)n.value=PN;document.querySelectorAll(".gen").forEach(b=>b.classList.toggle("on",b.dataset.g===PG));
+ document.querySelectorAll("[data-tok]").forEach(el=>{el.innerHTML=tok(el.dataset.tok)})}
+document.querySelectorAll(".gen").forEach(b=>b.onclick=()=>{PG=b.dataset.g;try{localStorage.setItem("pgen",PG)}catch(e){}paintPersona()});
+$("sname").addEventListener("change",()=>{PN=cleanName($("sname").value);$("sname").value=PN;try{localStorage.setItem("pname",PN)}catch(e){}paintPersona()});
+const _startP=start;start=function(){if(!personaReady()){view="p";$("dots").innerHTML="";$("stage").innerHTML=`<p class="need">✋ First write your first name and choose « un étudiant » or « une étudiante » above. The dialogues will use YOUR name and the right forms for you.</p>`;$("sname").focus();return}
+ try{localStorage.setItem("pname",PN)}catch(e){}Q.splice(0,Q.length,...deep(Q0));paintPersona();_startP()};
+paintPersona();autoBtn();
+function showVoices(){const vs=frVoices();const el=document.getElementById("vlist");if(!el)return;
+ if(!vs.length){el.textContent="🔧 No French voice found on this device: lines will be read by the default voice.";return}
+ const tag=v=>FEMV.test(v.name)?"♀":MASV.test(v.name)?"♂":"?";
+ el.textContent="🔧 French voices on this device: "+vs.map(v=>v.name.replace(/Microsoft |Google | - French.*| Online \(Natural\)/g,"")+" "+tag(v)+(v.localService===false?" (online)":"")).join(" · ")}
+showVoices();if("speechSynthesis" in window){speechSynthesis.addEventListener("voiceschanged",showVoices);setTimeout(showVoices,1500)}
+
+
+const PEOPLE=[
+ {lv:"l1",e:"🧑🏽",n:"Rohan",d:"Étudiant à RRU · Gandhinagar",tags:[["ig","📸 Instagram · ami ✓"]],say:"Salut !"},
+ {lv:"l2",e:"👩🏼‍💼",n:"Claire Dubois",d:"Ministère de la Culture · Paris · française",tags:[["li","💼 LinkedIn · connexion ✓"]],say:"Bonsoir !"},
+ {lv:"l3",e:"👨🏻",n:"Lucas Martin",d:"Journaliste · Lyon · français",tags:[["li","💼 LinkedIn · connexion ✓"],["ig","📸 Instagram · ami ✓"]],say:"À bientôt !"},
+ {lv:"l4",e:"🎉",n:"Rohan + Lucas + Claire",d:"Now they know each other too — thanks to you!",tags:[["ig","📸 Groupe « Amis RRU »"]],say:"Enchanté !"}];
+let NETDONE={};try{NETDONE=JSON.parse(localStorage.getItem("reseau")||"{}")}catch(e){}
+function renderNet(fresh){document.getElementById("netg").innerHTML=PEOPLE.map(p=>{const on=NETDONE[p.lv];return `<div class="pc ${on?"":"lock"} ${fresh===p.lv?"newfriend":""}"><div class="top"><span class="big">${on?p.e:"❔"}</span><div><b>${on?p.n:"Not met yet"}</b><div class="meta">${on?p.d:"Finish "+ALLSECS.find(s=>s.id===p.lv).name.split("·")[0]}</div></div></div><div>${on?p.tags.map(t=>`<span class="tag ${t[0]}">${t[1]}</span>`).join(""):""}</div></div>`}).join("")}
+function checkNet(){let fresh=null;ALLSECS.forEach(S=>{const ks=order.map((q,k)=>k).filter(k=>order[k].sec===S.id);if(ks.length&&ks.every(k=>res[k].done)&&!NETDONE[S.id]){NETDONE[S.id]=1;fresh=S.id}});if(fresh){try{localStorage.setItem("reseau",JSON.stringify(NETDONE))}catch(e){}renderNet(fresh)}}
+const _pick=pick;pick=function(o){_pick(o);checkNet()};
+const _rep=report;report=function(){_rep();const st=document.getElementById("stage");st.insertAdjacentHTML("afterbegin",document.getElementById("net").outerHTML.replace('id="net"','id="net2"').replace('id="netg"','id="netg2"'))};
+renderNet();
+</script>
+</body>
+</html>

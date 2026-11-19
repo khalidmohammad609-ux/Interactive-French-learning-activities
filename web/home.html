@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>French activities · RRU</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+:root{--bg:#fff8f1;--fg:#2b1a14;--muted:#7a5b4e;--accent:#c2410c;
+ --c1:#2563eb;--s1:#dde8ff;--c2:#db2777;--s2:#ffe1ef;--c3:#0d9488;--s3:#d4f4ee;--c4:#ea580c;--s4:#ffe6d4;--c5:#7c3aed;--s5:#ece3ff;--c6:#ca8a04;--s6:#fdf3c9}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:17px/1.5 "Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif}
+.wrap{max-width:900px;margin:0 auto;padding:28px 16px 60px;display:flex;flex-direction:column;gap:24px}
+h1{font:800 clamp(2rem,6vw,3.2rem)/1.1 "Bricolage Grotesque",system-ui,sans-serif;margin:0}
+h1 span{display:inline-block;padding:0 .18em;border-radius:.2em;background:var(--s2);color:var(--c2);transform:rotate(-2deg)}
+.eyebrow{font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--accent)}
+p{margin:0;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+a.card{display:flex;flex-direction:column;gap:6px;text-decoration:none;color:var(--fg);background:var(--s);border-top:7px solid var(--c);border-radius:18px;padding:16px 18px;transition:transform .15s}
+a.card:hover{transform:translateY(-3px)}
+.card b{font:800 1.2rem "Bricolage Grotesque",system-ui,sans-serif;color:var(--c)}
+.card span{font-size:.92rem}
+.card em{font-style:normal;font-size:.8rem;font-weight:700;color:var(--muted)}
+.empty{background:#fff;border:2px dashed var(--accent);border-radius:16px;padding:18px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Rashtriya Raksha University · Français</div>
+    <h1>Activités de <span>français</span> 🇫🇷</h1>
+  </header>
+  <p>Choose an activity. Write your first name at the start: your teacher sees your results.</p>
+  <div class="grid" id="list"></div>
+</div>
+<script>
+/*__DATA__*/
+var C=[1,2,3,4,5,6];
+var acts=(window.DATA&&DATA.activities)||[];
+document.getElementById('list').innerHTML=acts.length?acts.map(function(a,i){var n=C[i%6];
+ return '<a class="card" target="_top" style="--c:var(--c'+n+');--s:var(--s'+n+')" href="'+DATA.url+'?a='+encodeURIComponent(a.id)+'">'
+ +'<b>'+(a.emoji||'📘')+' '+esc(a.title)+'</b><span>'+esc(a.topic||'')+'</span><em>'+esc(a.for||'')+'</em></a>'}).join('')
+ :'<div class="empty">No activity yet.</div>';
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+</script>
+</body>
+</html>
