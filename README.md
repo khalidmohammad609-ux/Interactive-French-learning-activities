@@ -1,4 +1,4 @@
-# RRU French activities · results
+# Interactive French learning activities · RRU
 
 Interactive French activities for Dr. Mohammad Khalid's RRU classes. Each time a student finishes a level and opens « See my results », the result is saved to his Google Sheet. Students don't sign in or press any extra button. A private master page shows every result.
 

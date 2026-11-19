@@ -12,8 +12,8 @@
  */
 
 // ---- Settings ---------------------------------------------------------------
-const GITHUB_OWNER  = 'YOUR_GITHUB_USERNAME';   // filled in by Claude
-const GITHUB_REPO   = 'rru-french-activities';
+const GITHUB_OWNER  = 'khalidmohammad609-ux';
+const GITHUB_REPO   = 'interactive-french-learning-activities';
 const GITHUB_BRANCH = 'main';
 const CACHE_SECONDS = 300;                       // GitHub files are re-read every 5 min
 const SHEET_NAME    = 'Results';
