@@ -1,0 +1,23 @@
+name: Next.js app tests
+on:
+  push:
+    paths: ['next/**', 'web/**', 'activities/**', '.github/workflows/next-tests.yml']
+  pull_request:
+    paths: ['next/**', 'web/**', 'activities/**']
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: next
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: next/package-lock.json
+      - run: npm ci
+      - run: npm test
+      - run: npm run typecheck
+      - run: npm run build

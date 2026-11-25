@@ -177,6 +177,7 @@ $('sheet').href=D.sheet;$('home').href=D.url;$('fbList').href=D.repo+'/issues';
 $('ver').textContent='App version '+(D.version||'1.0')+(D.standard?' · Standard of '+D.standard.version:'');
 document.querySelectorAll('[data-close]').forEach(function(b){b.onclick=function(){$(b.dataset.close).classList.remove('on')}});
 document.querySelectorAll('.ov').forEach(function(o){o.addEventListener('click',function(e){if(e.target===o)o.classList.remove('on')})});
+function has(f){return !!(D.features&&D.features[f])}
 function findAct(id){return ACTS.filter(function(a){return a.id===id})[0]}
 function link(a){return D.url+'?a='+encodeURIComponent(a.id)}
 
@@ -184,11 +185,11 @@ function link(a){return D.url+'?a='+encodeURIComponent(a.id)}
 function card(a,i){var c=COL[i%COL.length],L=link(a);
  if(a.removed)return '<div class="act" style="--c:var(--muted);--s:#fff"><div class="t"><b>'+esc(a.emoji||'📘')+' '+esc(a.title)+'</b></div><div class="row"><button class="sm" data-act="restore" data-id="'+esc(a.id)+'">♻️ Restore</button></div></div>';
  return '<div class="act'+(a.hidden?' hid':'')+'" style="--c:var('+c[0]+');--s:var('+c[1]+')" data-card="'+esc(a.id)+'">'
- +'<div class="t"><b>'+esc(a.emoji||'📘')+' '+esc(a.title)+'</b><span class="badge">'+(a.source==='drive'?'📁 Drive':'🐙 GitHub')+'</span>'+(a.hidden?'<span class="badge">🙈 hidden</span>':'')+((a.video||a.short)?'<span class="badge">🎬 video</span>':'')+'</div>'
+ +'<div class="t"><b>'+esc(a.emoji||'📘')+' '+esc(a.title)+'</b><span class="badge">'+(a.source==='drive'?'📁 Drive':'🐙 GitHub')+'</span>'+(a.hidden?'<span class="badge">🙈 hidden</span>':'')+((a.video||a.short)?'<span class="badge">🎬 video</span>':'')+(has('askEmail')&&a.askEmail?'<span class="badge">📧 email required</span>':'')+'</div>'
  +'<span class="muted" style="font-size:.85rem">'+esc(a.topic||'')+(a['for']?' · '+esc(a['for']):'')+'</span>'
  +'<div class="row"><input readonly value="'+esc(L)+'"><button class="sm" data-copy="'+esc(L)+'">Copy</button><a class="sm" href="'+esc(L)+'" target="_blank">Open</a></div>'
  +'<div class="row"><button class="sm g" data-act="edit" data-id="'+esc(a.id)+'">✏️ Edit</button><button class="sm g" data-act="hide" data-id="'+esc(a.id)+'">'+(a.hidden?'👁 Show':'🙈 Hide')+'</button>'
- +'<button class="sm g" data-act="video" data-id="'+esc(a.id)+'">🎬 Videos</button><button class="sm g" data-act="upgrade" data-id="'+esc(a.id)+'">⬆️ Upgrade</button><button class="sm red" data-act="remove" data-id="'+esc(a.id)+'">🗑️ Remove</button></div>'
+ +'<button class="sm g" data-act="video" data-id="'+esc(a.id)+'">🎬 Videos</button>'+(has('askEmail')?'<button class="sm g" data-act="email" data-id="'+esc(a.id)+'">'+(a.askEmail?'📧 Stop asking email':'📧 Ask for email')+'</button>':'')+'<button class="sm g" data-act="upgrade" data-id="'+esc(a.id)+'">⬆️ Upgrade</button><button class="sm red" data-act="remove" data-id="'+esc(a.id)+'">🗑️ Remove</button></div>'
  +'<div class="edit" hidden></div></div>'}
 function renderActs(){var live=ACTS.filter(function(a){return !a.removed}),gone=ACTS.filter(function(a){return a.removed});
  $('acts').innerHTML=live.length?live.map(card).join(''):'<div class="load">No activity yet: click ➕ Add activity.</div>';
@@ -210,6 +211,7 @@ document.addEventListener('click',function(e){
  if(act==='hide')call('updateActivity',[D.key,id,{hidden:!a.hidden}],setActs,b);
  else if(act==='remove'){if(confirm('Remove « '+a.title+' »?\n\nStudents will no longer see it. Its past results stay in your Sheet, and you can restore it from « Removed activities ».'))call('updateActivity',[D.key,id,{removed:true}],setActs,b)}
  else if(act==='restore')call('updateActivity',[D.key,id,{removed:false}],setActs,b);
+ else if(act==='email')call('updateActivity',[D.key,id,{askEmail:!a.askEmail}],setActs,b);
  else if(act==='edit')openEdit(a,b);
  else if(act==='upgrade')openUpgrade(a);
  else if(act==='video')openVideos(a);
@@ -327,7 +329,7 @@ function pctPill(p){if(p===''||p==null)return '';var c=p>=80?'p-good':p>=50?'p-m
 function fmt(t){var d=new Date(t);return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short'})+' · '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}
 function filtered(){var a=$('fAct').value,w=+$('fWhen').value,n=$('fName').value.trim().toLowerCase(),now=new Date(),from=0;
  if(w===1){from=new Date(now.getFullYear(),now.getMonth(),now.getDate()).getTime()}else if(w>1){from=now.getTime()-w*864e5}
- return ROWS.filter(function(r){return(!a||r.id===a)&&(!from||r.t>=from)&&(!n||String(r.name).toLowerCase().indexOf(n)>-1)})}
+ return ROWS.filter(function(r){return(!a||r.id===a)&&(!from||r.t>=from)&&(!n||String(r.name).toLowerCase().indexOf(n)>-1||String(r.email||'').toLowerCase().indexOf(n)>-1)})}
 function stats(){var today=new Date();today.setHours(0,0,0,0);var t=ROWS.filter(function(r){return r.t>=today.getTime()});
  var names={};ROWS.forEach(function(r){if(r.name)names[String(r.name).toLowerCase()]=1});
  var ps=ROWS.filter(function(r){return r.pct!==''}).map(function(r){return +r.pct});var avg=ps.length?Math.round(ps.reduce(function(a,b){return a+b},0)/ps.length):'–';
@@ -342,7 +344,7 @@ function render(){var R=filtered().slice().sort(function(a,b){return b.t-a.t});$
    return '<tr><td>'+(s.name?'<span class="nm">'+esc(s.name)+'</span>':'<span class="anon">no name</span>')+'</td><td>'+s.n+'</td><td>'+pctPill(s.avg)+'</td><td>'+pctPill(s.best)+'</td><td>'+fmt(s.last)+'</td><td>'+esc(s.acts.join(' · '))+'</td></tr>'}).join('')+'</tbody></table>';return}
  $('table').innerHTML='<table><thead><tr><th>When</th><th>Name</th><th>Activity</th><th>Level</th><th>Score</th><th>%</th><th>Errors</th></tr></thead><tbody>'+R.map(function(r){
   var n=r.errors?String(r.errors).split('\n').length:0;
-  return '<tr><td style="white-space:nowrap">'+fmt(r.t)+'</td><td>'+(r.name?'<span class="nm">'+esc(r.name)+'</span>':'<span class="anon">no name</span>')+'</td><td>'+esc(r.activity)+'</td><td>'+esc(r.level)+'</td><td style="white-space:nowrap">'+esc(r.score)+' / '+esc(r.total)+'<div class="muted" style="font-size:.78rem">✔'+esc(r.first)+' · ½'+esc(r.second)+' · ✗'+esc(r.review)+'</div></td><td>'+pctPill(r.pct)+'</td><td>'
+  return '<tr><td style="white-space:nowrap">'+fmt(r.t)+'</td><td>'+(r.name?'<span class="nm">'+esc(r.name)+'</span>':'<span class="anon">no name</span>')+(r.email?'<div class="muted" style="font-size:.78rem">'+esc(r.email)+'</div>':'')+'</td><td>'+esc(r.activity)+'</td><td>'+esc(r.level)+'</td><td style="white-space:nowrap">'+esc(r.score)+' / '+esc(r.total)+'<div class="muted" style="font-size:.78rem">✔'+esc(r.first)+' · ½'+esc(r.second)+' · ✗'+esc(r.review)+'</div></td><td>'+pctPill(r.pct)+'</td><td>'
   +(n?'<details><summary>'+n+' to review</summary><pre>'+esc(r.errors)+'</pre></details>':'<span style="color:var(--good);font-weight:700">Parfait ✓</span>')+'</td></tr>'}).join('')+'</tbody></table>'}
 function load(){$('refresh').textContent='⏳ Loading…';var r=run();
  if(!r){$('table').innerHTML='<div class="load">Preview mode: no data.</div>';$('refresh').textContent='🔄 Refresh';return}
