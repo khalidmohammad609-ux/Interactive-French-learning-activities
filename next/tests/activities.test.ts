@@ -6,7 +6,7 @@ import type { ActivityRow, GithubActivity } from '@/lib/types';
 
 const row = (p: Partial<ActivityRow>): ActivityRow => ({
   id: 'x', title: null, emoji: null, topic: null, for: null, source: 'github', file_path: null, hidden: null,
-  removed: false, video: null, short: null, updated: '2026-11-20T00:00:00Z', created: '2026-11-20T00:00:00Z', ...p,
+  removed: false, ask_email: null, video: null, short: null, updated: '2026-11-20T00:00:00Z', created: '2026-11-20T00:00:00Z', ...p,
 });
 const gh: GithubActivity[] = [
   { id: 'a', title: 'A', emoji: '🤝', topic: 'tA', for: 'A1', file: 'a.html', updated: '2026-11-19' },
@@ -36,6 +36,14 @@ describe('merge (same rules as Code.gs activities_)', () => {
     expect(newer[0]).toMatchObject({ title: 'Upload A', source: 'upload' });
     const older = merge(gh, [row({ id: 'a', title: 'Upload A', source: 'upload', file_path: 'p', updated: '2026-11-01T00:00:00Z' })], false);
     expect(older[0]).toMatchObject({ title: 'A', source: 'github' });
+  });
+  it('askEmail: from the GitHub list, an upload row, or a teacher override (null = unchanged)', () => {
+    const g2 = [{ ...gh[0], askEmail: true }, gh[1]];
+    expect(merge(g2, [], false)[0].askEmail).toBe(true);
+    expect(merge(g2, [row({ id: 'a', title: 'x', ask_email: null })], false)[0].askEmail).toBe(true);
+    expect(merge(g2, [row({ id: 'a', ask_email: false })], false)[0].askEmail).toBe(false);
+    expect(merge(gh, [row({ id: 'b', ask_email: true })], false)[1].askEmail).toBe(true);
+    expect(merge(gh, [row({ id: 'c', source: 'upload', file_path: 'c', ask_email: true })], false)[2].askEmail).toBe(true);
   });
   it('github override rows for unknown ids are ignored', () => {
     expect(merge(gh, [row({ id: 'zzz', title: 'ghost' })], true).map((a) => a.id)).toEqual(['a', 'b']);
@@ -77,6 +85,19 @@ describe('teacher actions on the store', () => {
     expect((await activities(false)).some((x) => x.id === 'imparfait')).toBe(false);
     list = await updateActivity('imparfait', { removed: false });
     expect((await activities(false)).some((x) => x.id === 'imparfait')).toBe(true);
+  });
+
+  it('📧 switch on and off, for GitHub and uploaded activities', async () => {
+    let list = await updateActivity('imparfait', { askEmail: true });
+    expect(list.find((a) => a.id === 'imparfait')!.askEmail).toBe(true);
+    list = await updateActivity('imparfait', { title: 'Other change' });
+    expect(list.find((a) => a.id === 'imparfait')!.askEmail).toBe(true);
+    list = await updateActivity('imparfait', { askEmail: false });
+    expect(list.find((a) => a.id === 'imparfait')!.askEmail).toBe(false);
+    list = await addActivity({ title: 'Up' }, page);
+    expect(list.find((a) => a.id === 'up')!.askEmail).toBe(false);
+    list = await updateActivity('up', { askEmail: true });
+    expect(list.find((a) => a.id === 'up')!.askEmail).toBe(true);
   });
 
   it('unknown activity → error', async () => {

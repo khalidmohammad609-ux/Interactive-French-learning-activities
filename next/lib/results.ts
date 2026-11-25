@@ -11,6 +11,11 @@ const num = (v: unknown): number | null => {
   const x = Number(v);
   return Number.isFinite(x) ? x : null;
 };
+/** A typed email, lower-cased; '' if it doesn't look like an email (results are kept anyway). */
+export function cleanEmail(v: unknown): string {
+  const e = String(v == null ? '' : v).trim().toLowerCase().slice(0, 120);
+  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e) ? e : '';
+}
 const int = (v: unknown): number | null => { const x = num(v); return x == null ? null : Math.round(x); };
 
 /** Same clipping rules as Code.gs saveResult. Returns null if the payload is unusable. */
@@ -18,7 +23,7 @@ export function buildResult(r: Record<string, unknown>, act: { id: string; title
   const total = int(r.total), score = num(r.score);
   return {
     created: new Date().toISOString(),
-    name: clip(r.name, 40).trim(), activity_id: act.id, activity_title: act.title, level: clip(r.level, 120),
+    name: clip(r.name, 40).trim(), email: cleanEmail(r.email), activity_id: act.id, activity_title: act.title, level: clip(r.level, 120),
     score, total, pct: total && score != null ? Math.round(score / total * 100) : null,
     first: int(r.first), second: int(r.second), review: int(r.review),
     errors: clip(r.errors, 3000), device: clip(r.device, 20), ip_hash: ipHash,
@@ -48,13 +53,13 @@ export async function saveResult(body: unknown, ip: string): Promise<SaveOutcome
 /** Results in the shape web/teacher.html uses (same as Code.gs getResults). */
 export async function teacherResults() {
   return (await store().listResults()).map((x) => ({
-    t: Date.parse(x.created), name: x.name, activity: x.activity_title, id: x.activity_id, level: x.level,
+    t: Date.parse(x.created), name: x.name, email: x.email || '', activity: x.activity_title, id: x.activity_id, level: x.level,
     score: x.score ?? '', total: x.total ?? '', pct: x.pct ?? '', first: x.first ?? '', second: x.second ?? '',
     review: x.review ?? '', errors: x.errors, device: x.device,
   }));
 }
 
-const CSV_HEAD = ['Date & time', 'Name', 'Activity', 'Activity id', 'Level', 'Score', 'Out of', '%',
+const CSV_HEAD = ['Date & time', 'Name', 'Email', 'Activity', 'Activity id', 'Level', 'Score', 'Out of', '%',
   'Right 1st try', 'Right 2nd try', 'To review', 'Errors', 'Device'];
 
 /** CSV export (same columns as the old Sheet). Opens in Excel / Google Sheets. */
@@ -65,7 +70,7 @@ export async function resultsCsv(): Promise<string> {
     return /[",\n\r]/.test(t) ? '"' + t.replace(/"/g, '""') + '"' : t;
   };
   const fmt = (iso: string) => new Date(iso).toLocaleString('en-GB', { timeZone: 'Asia/Kolkata' });
-  const rows = (await store().listResults()).map((x) => [fmt(x.created), x.name, x.activity_title, x.activity_id, x.level,
+  const rows = (await store().listResults()).map((x) => [fmt(x.created), x.name, x.email, x.activity_title, x.activity_id, x.level,
     x.score, x.total, x.pct, x.first, x.second, x.review, x.errors, x.device]);
   return '﻿' + [CSV_HEAD, ...rows].map((r) => r.map(cell).join(',')).join('\r\n') + '\r\n';
 }

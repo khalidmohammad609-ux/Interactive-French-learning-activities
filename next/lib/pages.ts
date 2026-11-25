@@ -1,6 +1,6 @@
 import { FILES } from './content.generated';
 import { activities, activitySource, findActivity, publicAct, teacherAct } from './activities';
-import { RUN_SHIM, TEACHER_WORDING, beforeBodyEnd, headStart, pwaTags, safeJson } from './html';
+import { EMAIL_GATE, RUN_SHIM, TEACHER_WORDING, beforeBodyEnd, headStart, pwaTags, safeJson } from './html';
 
 const VERSION = '2.0';
 const REPO = 'https://github.com/khalidmohammad609-ux/Interactive-French-learning-activities';
@@ -17,8 +17,8 @@ export async function activityHtml(id: string): Promise<{ html: string; title: s
   const a = await findActivity(id);
   if (!a) return null;
   const html = headStart(await activitySource(a), RUN_SHIM);
-  const bridge = '<script>window.RRU_ACTIVITY=' + safeJson({ id: a.id, title: a.title, video: a.video, short: a.short }) + ';</script>\n' +
-    '<script>' + FILES['web/bridge.js'] + '</script>\n';
+  const bridge = '<script>window.RRU_ACTIVITY=' + safeJson({ id: a.id, title: a.title, video: a.video, short: a.short, askEmail: a.askEmail }) + ';</script>\n' +
+    '<script>' + FILES['web/bridge.js'] + '</script>\n' + (a.askEmail ? EMAIL_GATE : '');
   return { html: beforeBodyEnd(html, bridge), title: a.title };
 }
 
@@ -27,7 +27,7 @@ export async function teacherHtml(origin: string): Promise<string> {
   let standard = null;
   try { standard = JSON.parse(FILES['web/standard.json']); } catch { /* page copes without it */ }
   const data = {
-    url: origin + '/', key: '', version: VERSION, sheet: '/api/teacher/export', repo: REPO, standard,
+    url: origin + '/', key: '', version: VERSION, features: { askEmail: true }, sheet: '/api/teacher/export', repo: REPO, standard,
     activities: (await activities(true)).map(teacherAct),
   };
   let html = FILES['web/teacher.html'];

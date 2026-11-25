@@ -51,7 +51,7 @@ export function pwaTags(manifest: string): string {
  */
 export const RUN_SHIM = `<script>(function(){
 var M={
- saveResult:function(r){return['POST','/api/results',r]},
+ saveResult:function(r){var A=window.RRU_ACTIVITY,e;if(A&&A.askEmail&&r&&!r.email&&r.id===A.id){try{e=localStorage.getItem('rru_email')}catch(x){}if(e)r.email=e}return['POST','/api/results',r]},
  getResults:function(){return['GET','/api/teacher/results']},
  getActivities:function(){return['GET','/api/teacher/activities']},
  addActivity:function(k,meta,html){return['POST','/api/teacher/activities',{meta:meta,html:html}]},
@@ -92,3 +92,34 @@ export const TEACHER_WORDING: [string, string][] = [
   ['Its past results stay in your Sheet', 'Its past results are kept'],
   ["'Drive file `'", "'Uploaded file `'"],
 ];
+
+/**
+ * Shown on activities where the teacher switched on « 📧 Ask for email ». It always asks (pre-filled with the
+ * last email used on this device, one tap to confirm), so on a shared lab computer a result never goes to the
+ * previous student's email.
+ */
+export const EMAIL_GATE = `<script>(function(){
+var K='rru_email',RE=/^[^\\s@]+@[^\\s@]+\\.[^\\s@]{2,}$/,last='';
+try{last=localStorage.getItem(K)||''}catch(e){}
+var ov=document.createElement('div');ov.id='rru-email';
+ov.style.cssText='position:fixed;inset:0;z-index:100000;display:flex;align-items:center;justify-content:center;padding:16px;'+
+ 'background:rgba(43,26,20,.55);backdrop-filter:blur(3px);font:17px/1.5 "Atkinson Hyperlegible",system-ui,sans-serif;color:#2b1a14';
+ov.innerHTML='<form style="width:100%;max-width:420px;background:linear-gradient(135deg,#fff1f8,#eef4ff);border-radius:24px;border-top:8px solid #db2777;padding:24px 22px;box-shadow:0 12px 40px rgba(0,0,0,.25);box-sizing:border-box">'+
+ '<div style="font-size:2.4rem;line-height:1">📧</div>'+
+ '<h2 style="margin:8px 0 4px;font:800 1.6rem \\'Bricolage Grotesque\\',system-ui,sans-serif">Your email · Votre e-mail</h2>'+
+ '<p style="margin:0 0 12px;color:#7a5b4e">Your teacher asks for your email for this activity.</p>'+
+ '<input id="rru-email-in" type="email" inputmode="email" autocomplete="email" required placeholder="name@example.com" '+
+ 'style="font:inherit;font-size:18px;width:100%;box-sizing:border-box;padding:12px 14px;border:3px solid #e9a8cf;border-radius:14px;background:#fff">'+
+ '<div id="rru-email-msg" style="min-height:1.4em;margin:6px 2px;color:#b91c1c;font-size:.9rem"></div>'+
+ '<button style="font:inherit;font-weight:800;font-size:18px;width:100%;padding:12px;border:0;border-radius:999px;cursor:pointer;color:#fff;background:linear-gradient(90deg,#db2777,#7c3aed)">Start · Commencer →</button>'+
+ (last?'<p style="margin:10px 0 0;font-size:.85rem;color:#7a5b4e">Not your email? Change it above.</p>':'')+'</form>';
+function show(){
+ document.body.appendChild(ov);var inp=document.getElementById('rru-email-in');inp.value=last;
+ ov.querySelector('form').onsubmit=function(e){e.preventDefault();var v=inp.value.trim().toLowerCase();
+  if(!RE.test(v)){document.getElementById('rru-email-msg').textContent='Please type a full email address, like name@gmail.com';inp.focus();return}
+  try{localStorage.setItem(K,v)}catch(x){}ov.remove();
+  var nm=document.getElementById('sname');if(nm&&!nm.value)nm.focus({preventScroll:true})};
+ setTimeout(function(){inp.focus()},50);
+}
+if(document.body)show();else addEventListener('DOMContentLoaded',show);
+})();</script>`;

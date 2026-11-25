@@ -64,6 +64,20 @@ describe('pages', () => {
     expect(bridge).toBeLessThan(end);
     expect(h).toContain('youtu.be/abcdefgh');
   });
+  it('email box only on activities where it is switched on', async () => {
+    expect((await activityHtml('imparfait'))!.html).not.toContain('rru-email');
+    await updateActivity('imparfait', { askEmail: true });
+    const h = (await activityHtml('imparfait'))!.html;
+    expect(h).toContain('rru-email');
+    expect(h).toContain('"askEmail":true');
+    expect(h.indexOf('Results bridge')).toBeLessThan(h.indexOf('rru-email'));
+  });
+  it('master page turns on the 📧 switch; teacher.html hides it when the flag is absent (Apps Script)', async () => {
+    expect(await teacherHtml('https://x.app')).toContain('"features":{"askEmail":true}');
+    const t = FILES['web/teacher.html'];
+    expect(t).toContain("has('askEmail')?'<button");
+    expect(t).toContain('function has(f){return !!(D.features&&D.features[f])}');
+  });
   it('unknown and removed activities give null (404)', async () => {
     expect(await activityHtml('nope')).toBeNull();
     await updateActivity('imparfait', { removed: true });

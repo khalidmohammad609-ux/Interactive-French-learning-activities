@@ -23,7 +23,7 @@ export function merge(gh: GithubActivity[], rows: ActivityRow[], includeRemoved:
     if (!map.has(a.id)) order.push(a.id);
     map.set(a.id, {
       id: a.id, title: a.title, emoji: s(a.emoji), topic: s(a.topic), for: s(a.for), source: 'github', file: a.file,
-      hidden: !!a.hidden, removed: false, updated: s(a.updated), video: s(a.video), short: s(a.short),
+      hidden: !!a.hidden, removed: false, askEmail: !!a.askEmail, updated: s(a.updated), video: s(a.video), short: s(a.short),
     });
   }
   for (const r of rows.filter((x) => x.source === 'upload')) {
@@ -33,7 +33,7 @@ export function merge(gh: GithubActivity[], rows: ActivityRow[], includeRemoved:
       if (!map.has(r.id)) order.push(r.id);
       map.set(r.id, {
         id: r.id, title: s(r.title), emoji: s(r.emoji), topic: s(r.topic), for: s(r.for), source: 'upload',
-        filePath: s(r.file_path), hidden: !!r.hidden, removed: !!r.removed, updated: r.updated,
+        filePath: s(r.file_path), hidden: !!r.hidden, removed: !!r.removed, askEmail: !!r.ask_email, updated: r.updated,
         video: s(r.video), short: s(r.short),
       });
     }
@@ -45,6 +45,7 @@ export function merge(gh: GithubActivity[], rows: ActivityRow[], includeRemoved:
       if (r[k] != null && r[k] !== '') a[k] = r[k] as string;
     }
     if (r.hidden != null) a.hidden = r.hidden;
+    if (r.ask_email != null) a.askEmail = r.ask_email;
     a.removed = !!r.removed;
   }
   return order.map((id) => map.get(id)!).filter((a) => includeRemoved || !a.removed);
@@ -89,7 +90,7 @@ export async function addActivity(meta: NewActivity, html: string): Promise<Acti
     const inserted = await store().insertActivityRow({
       id, title, emoji: String(meta.emoji || '📘').slice(0, 8), topic: String(meta.topic || '').slice(0, 200),
       for: String(meta.for || '').slice(0, 80), source: 'upload', file_path: path, hidden: !!meta.hidden,
-      removed: false, video: '', short: '', updated: now, created: now,
+      removed: false, ask_email: false, video: '', short: '', updated: now, created: now,
     });
     if (inserted) return activities(true);
     taken.add(id); // someone took it at the same moment: try the next one
@@ -99,7 +100,7 @@ export async function addActivity(meta: NewActivity, html: string): Promise<Acti
 
 const TEXT_FIELDS = ['title', 'emoji', 'topic', 'for', 'video', 'short'] as const;
 
-/** Teacher edit: title / emoji / topic / for / video / short / hidden / removed. Mirrors Code.gs updateActivity. */
+/** Teacher edit: title / emoji / topic / for / video / short / hidden / removed / askEmail. Mirrors Code.gs updateActivity. */
 export async function updateActivity(id: string, patch: Record<string, unknown>): Promise<Activity[]> {
   const act = (await activities(true)).find((a) => a.id === id);
   if (!act) throw new Error('Activity not found.');
@@ -107,6 +108,7 @@ export async function updateActivity(id: string, patch: Record<string, unknown>)
   for (const k of TEXT_FIELDS) if (k in patch) p[k] = String(patch[k] ?? '').slice(0, 500);
   if ('hidden' in patch) p.hidden = !!patch.hidden;
   if ('removed' in patch) p.removed = !!patch.removed;
+  if ('askEmail' in patch) p.ask_email = !!patch.askEmail;
   const rows = await store().listActivityRows();
   const row = rows.find((r) => r.id === id && r.source === act.source);
   if (act.source === 'upload') p.updated = new Date().toISOString();
@@ -116,7 +118,7 @@ export async function updateActivity(id: string, patch: Record<string, unknown>)
     const now = new Date().toISOString();
     const ok = await store().insertActivityRow({
       id, title: null, emoji: null, topic: null, for: null, source: 'github', file_path: null, hidden: null,
-      removed: false, video: null, short: null, updated: now, created: now, ...p,
+      removed: false, ask_email: null, video: null, short: null, updated: now, created: now, ...p,
     });
     if (!ok) throw new Error('An uploaded activity already uses the id "' + id + '". Ask Claude to rename one of them.');
   }

@@ -46,7 +46,7 @@ What does **not** change for students: same activity pages, no sign-in, no extra
 | « 📊 Open the Sheet » | « 📊 Export results (CSV) » → `GET /api/teacher/export` (same columns as the Sheet) |
 | `setup()`, `showMyLinks()` | Not needed |
 
-`bridge.js`, `home.html`, `teacher.html`: **not changed at all** (decided while building). The new app adds a small adapter (`RUN_SHIM` in `next/lib/html.ts`) that provides `google.script.run` and turns each call into a `fetch()` to the matching `/api` route. So the same files serve both apps during testing, and every future change to them reaches both. The few Apps Script words on the master page (« Open the Sheet », « Drive », « keep this link private ») are swapped when the new app serves it (`TEACHER_WORDING`); a test fails if one of them is no longer found. Old links keep working: `/?a=<id>` → `/a/<id>`, `/?page=teacher` → `/teacher`.
+`bridge.js`, `home.html`: **not changed at all** (decided while building). `teacher.html`: only the 📧 additions below, shown only when the new app sets `DATA.features`, so the Apps Script master page looks and works as before. The new app adds a small adapter (`RUN_SHIM` in `next/lib/html.ts`) that provides `google.script.run` and turns each call into a `fetch()` to the matching `/api` route. So the same files serve both apps during testing, and every future change to them reaches both. The few Apps Script words on the master page (« Open the Sheet », « Drive », « keep this link private ») are swapped when the new app serves it (`TEACHER_WORDING`); a test fails if one of them is no longer found. Old links keep working: `/?a=<id>` → `/a/<id>`, `/?page=teacher` → `/teacher`.
 
 `teacher.html` features that move unchanged: stats, activity cards (Copy, Open, Edit, Hide, Videos, Upgrade, Remove/Restore), results with filters and « By student », 2-minute auto-refresh, Feedback / Upgrade / Add-from-link as GitHub issues, NotebookLM video guide, `standard.json` checks.
 
@@ -91,6 +91,8 @@ Row-level security on: the public can only insert into `results` (through the AP
 
 Existing results: 0 attempts so far, so nothing to import. If results exist at switch time, Claude imports the Sheet rows once.
 
+Activities Khalid uploaded from the Apps Script master page (Drive folder « French activities — files », « Activities » tab of the Sheet) are **not** read by the new app. At switch time Claude copies them (file + title/emoji/topic/for/hidden/video settings) into the new app, keeping their ids so the links stay the same.
+
 ## 6. Limits to know
 
 - **Supabase free plan pauses a project after about 1 week with no activity** (e.g. holidays). Data is kept and it can be resumed from the dashboard. Fix: a small GitHub Action pings the database every 3 days.
@@ -98,6 +100,14 @@ Existing results: 0 attempts so far, so nothing to import. If results exist at s
 - **This repository is public.** Student names, results and keys must never be committed. Keys live only in Vercel's settings.
 - **University Google/Microsoft accounts** may block sign-in emails; use the personal Gmail for the teacher login, as for Apps Script today.
 - **Upgrade, Add-from-link and Feedback** still open GitHub issues; Claude processes them as now ("check my app feedback").
+
+## 6b. Added on 25 Nov: « 📧 Ask for email » (new app only)
+
+- Each activity card on the master page has a **📧 Ask for email** switch (badge « 📧 email required » when on). Claude can also set `"askEmail": true` in `activities/activities.json`.
+- When on, the activity opens with a box asking for the student's email; it won't close until the email looks valid. It is pre-filled with the last email used on that device but **always asks**, so on a shared lab computer a result never goes to the previous student.
+- The email is saved with the result (`results.email`), shown under the name on the master page, searchable in the name box, and in the CSV (« Email » column). Activities without the switch never send an email.
+- A typed email is not verified: a student can type someone else's. Verified sign-in for students is possible later but is a bigger change.
+- Database: `activities.ask_email`, `results.email` (in `schema.sql`; it adds them to an existing database too).
 
 ## 7. Setup for steps 1–2 (Khalid, on the laptop, ≈20 minutes)
 
@@ -117,7 +127,7 @@ The secret key must never be pasted in chat, in GitHub or anywhere else than Ver
 
 ## 8. What was tested (25 Nov) and what can only be tested after setup
 
-Tested here: 38 automated tests (merge rules, result clipping, rate limit, CSV, every teacher route refused without login, schema on Postgres); production build; a real Chrome run on a phone-sized screen: an activity played to the end → « ✅ Result saved »; the same offline → queued, then sent at the next visit; master page shows both results, 🙈 Hide removes it from the student page, ⬆️ Upgrade reads the page.
+Tested here: 43 automated tests (merge rules, result clipping, rate limit, CSV, every teacher route refused without login, schema on Postgres); production build; a real Chrome run on a phone-sized screen: an activity played to the end → « ✅ Result saved »; the same offline → queued, then sent at the next visit; master page shows both results, 🙈 Hide removes it from the student page, ⬆️ Upgrade reads the page; 📧 switch on → email box on the activity → email shown on the master page and in the CSV, not on other activities; the Apps Script version of the master page shows no 📧 button and no errors.
 
 Only after setup (step 4): the real Supabase connection, the email sign-in, uploads to Storage. These use the in-memory stand-in in the tests.
 

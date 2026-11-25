@@ -9,6 +9,7 @@ export type ActivityRow = {
   file_path: string | null;
   hidden: boolean | null; // null = not changed by the teacher
   removed: boolean;
+  ask_email: boolean | null; // null = not changed by the teacher
   video: string | null;
   short: string | null;
   updated: string; // ISO date
@@ -18,7 +19,7 @@ export type ActivityRow = {
 /** One entry of activities/activities.json in the repo. */
 export type GithubActivity = {
   id: string; title: string; emoji?: string; topic?: string; for?: string;
-  file: string; updated?: string; hidden?: boolean; video?: string; short?: string;
+  file: string; updated?: string; hidden?: boolean; askEmail?: boolean; video?: string; short?: string;
 };
 
 /** An activity after merging the GitHub list with the database rows. */
@@ -27,14 +28,14 @@ export type Activity = {
   source: 'github' | 'upload';
   file?: string;       // GitHub file name
   filePath?: string;   // Storage path (uploads)
-  hidden: boolean; removed: boolean;
+  hidden: boolean; removed: boolean; askEmail: boolean;
   updated: string; video: string; short: string;
 };
 
 export type ResultRow = {
   id?: number;
   created: string;
-  name: string; activity_id: string; activity_title: string; level: string;
+  name: string; email: string; activity_id: string; activity_title: string; level: string;
   score: number | null; total: number | null; pct: number | null;
   first: number | null; second: number | null; review: number | null;
   errors: string; device: string;

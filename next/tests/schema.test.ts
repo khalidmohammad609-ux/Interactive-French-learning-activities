@@ -19,18 +19,19 @@ describe('supabase/schema.sql', () => {
       await db.query(`insert into ${table} (${keys.map((k) => `"${k}"`).join(',')}) values (${keys.map((_, i) => '$' + (i + 1)).join(',')})`, Object.values(obj));
     };
     const now = new Date().toISOString();
-    const act: ActivityRow = { id: 'up', title: 'T', emoji: '📘', topic: '', for: 'A1', source: 'upload', file_path: 'up.html', hidden: false, removed: false, video: '', short: '', updated: now, created: now };
+    const act: ActivityRow = { id: 'up', title: 'T', emoji: '📘', topic: '', for: 'A1', source: 'upload', file_path: 'up.html', hidden: false, removed: false, ask_email: true, video: '', short: '', updated: now, created: now };
     await insert('activities', act as unknown as Record<string, unknown>);
-    await insert('activities', { ...act, id: 'gh', source: 'github', title: null, hidden: null, file_path: null });
+    await insert('activities', { ...act, id: 'gh', source: 'github', title: null, hidden: null, ask_email: null, file_path: null });
     await expect(insert('activities', { ...act, id: 'bad', source: 'drive' })).rejects.toThrow();
     await expect(insert('activities', act as unknown as Record<string, unknown>)).rejects.toThrow(/duplicate|unique/);
 
-    const r = buildResult({ name: 'Kavya', score: 7.5, total: 10, first: 7, second: 1, review: 2, errors: 'x', device: 'mobile' }, { id: 'up', title: 'T' }, 'abc');
+    const r = buildResult({ name: 'Kavya', email: 'Kavya@Example.com', score: 7.5, total: 10, first: 7, second: 1, review: 2, errors: 'x', device: 'mobile' }, { id: 'up', title: 'T' }, 'abc');
     await insert('results', r as unknown as Record<string, unknown>);
     const rows = (await db.query<{ score: string; pct: number }>('select * from results')).rows;
     expect(rows).toHaveLength(1);
     expect(Number(rows[0].score)).toBe(7.5);
     expect(rows[0].pct).toBe(75);
+    expect((rows[0] as unknown as { email: string }).email).toBe('kavya@example.com');
 
     const rls = (await db.query<{ relname: string; relrowsecurity: boolean }>(
       `select relname, relrowsecurity from pg_class where relname in ('activities','results')`)).rows;

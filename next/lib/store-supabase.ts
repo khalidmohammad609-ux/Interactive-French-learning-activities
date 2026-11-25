@@ -32,7 +32,7 @@ export function supabaseStore(url: string, secretKey: string): Store {
       const all: ResultRow[] = [];
       for (let from = 0; ; from += 1000) { // Supabase returns at most 1000 rows per request
         const page = ok(await db.from('results')
-          .select('id,created,name,activity_id,activity_title,level,score,total,pct,first,second,review,errors,device')
+          .select('id,created,name,email,activity_id,activity_title,level,score,total,pct,first,second,review,errors,device')
           .order('id', { ascending: true }).range(from, from + 999)) as ResultRow[];
         all.push(...page);
         if (page.length < 1000) return all;

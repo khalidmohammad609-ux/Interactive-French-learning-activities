@@ -15,6 +15,10 @@ describe('buildResult (same clipping as Code.gs saveResult)', () => {
     expect(r.device.length).toBe(20);
     expect(r).toMatchObject({ pct: 75, score: 7.5, total: 10, activity_title: "L'imparfait", activity_id: 'imparfait' });
   });
+  it('email: trimmed, lower-cased; not an email → empty (the result is still kept)', () => {
+    expect(buildResult({ email: '  Tawonga.B@Gmail.COM ' }, act, null).email).toBe('tawonga.b@gmail.com');
+    for (const bad of ['tawonga', 'a@b', 'a b@c.com', '', null]) expect(buildResult({ email: bad }, act, null).email).toBe('');
+  });
   it('bad numbers become empty, not NaN', () => {
     const r = buildResult({ score: 'abc', total: '' }, act, null);
     expect(r).toMatchObject({ score: null, total: null, pct: null });
@@ -55,7 +59,7 @@ describe('CSV export', () => {
   it('has the Sheet columns, quotes commas/newlines and defuses formulas', async () => {
     await saveResult({ id: 'imparfait', name: '=HYPERLINK("x")', errors: 'a, b\nc', score: 1, total: 2 }, '1.1.1.1');
     const csv = await resultsCsv();
-    expect(csv.startsWith('﻿Date & time,Name,Activity')).toBe(true);
+    expect(csv.startsWith('\uFEFFDate & time,Name,Email,Activity')).toBe(true);
     expect(csv).toContain(`"'=HYPERLINK(""x"")"`);
     expect(csv).toContain('"a, b\nc"');
   });
